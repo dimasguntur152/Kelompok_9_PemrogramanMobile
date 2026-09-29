@@ -1,9 +1,21 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Platform,
+  StatusBar,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import { useApp } from './context/AppContext';
 import { Header } from './components/Header';
 import { BottomTab } from './components/BottomTab';
 import { ResponsiveWrapper } from './components/ResponsiveWrapper';
+
+// Auth Screens
+import { LoginScreen } from './screens/auth/LoginScreen';
+import { RegisterScreen } from './screens/auth/RegisterScreen';
 
 // Customer Screens
 import { HomeScreen } from './screens/customer/HomeScreen';
@@ -22,8 +34,45 @@ import { ProfileScreen } from './screens/customer/ProfileScreen';
 import { colors } from './theme/colors';
 
 export const AppRoot = () => {
-  const { currentScreen, activeOrder } = useApp();
+  const { currentScreen, activeOrder, authState } = useApp();
 
+  // 1. Session Verification State
+  if (authState === 'CHECKING') {
+    return (
+      <ResponsiveWrapper>
+        <SafeAreaView style={[styles.safeArea, styles.loadingCenter]}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loadingText}>
+            Memverifikasi Sesi Kedai Tong Djajakarta...
+          </Text>
+        </SafeAreaView>
+      </ResponsiveWrapper>
+    );
+  }
+
+  // 2. Unauthenticated State (Screen gatekeeping: only Login & Register allowed)
+  if (authState === 'UNAUTHENTICATED') {
+    const isRegister = currentScreen === 'register';
+    const AuthComponent = isRegister ? RegisterScreen : LoginScreen;
+
+    return (
+      <ResponsiveWrapper>
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar
+            barStyle="dark-content"
+            backgroundColor={colors.surface}
+          />
+          <View style={styles.screenContainer}>
+            <View style={styles.contentArea}>
+              <AuthComponent />
+            </View>
+          </View>
+        </SafeAreaView>
+      </ResponsiveWrapper>
+    );
+  }
+
+  // 3. Authenticated State: Full Access to Kedai Tong Djajakarta
   const getScreenConfig = () => {
     switch (currentScreen) {
       case 'beranda':
@@ -192,5 +241,15 @@ const styles = StyleSheet.create({
   },
   contentArea: {
     flex: 1,
+  },
+  loadingCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 14,
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontWeight: '600',
   },
 });

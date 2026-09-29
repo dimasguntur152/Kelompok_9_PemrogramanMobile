@@ -1,13 +1,25 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { INITIAL_MENU, INITIAL_ORDERS, KEDAI_INFO } from '../data/mockData';
+import {
+  getActiveSession,
+  clearActiveSession,
+  authenticateUser,
+  registerUser,
+} from '../services/authService';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  // Authentication & Security State
+  // authState: 'CHECKING' | 'AUTHENTICATED' | 'UNAUTHENTICATED'
+  const [authState, setAuthState] = useState('CHECKING');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [sessionClearedMessage, setSessionClearedMessage] = useState(null);
+
   // Navigation State
-  const [currentScreen, setCurrentScreen] = useState('beranda');
+  const [currentScreen, setCurrentScreen] = useState('login');
   const [activeTab, setActiveTab] = useState('beranda'); // 'beranda' | 'aktivitas' | 'profil'
-  const [screenStack, setScreenStack] = useState(['beranda']);
+  const [screenStack, setScreenStack] = useState(['login']);
 
   // Cart State: { [productId]: quantity }
   const [cart, setCart] = useState({});
@@ -21,11 +33,62 @@ export const AppProvider = ({ children }) => {
   const [orders, setOrders] = useState(INITIAL_ORDERS);
   const [activeOrderId, setActiveOrderId] = useState('TDJ-001');
 
-  // Navigation helpers
+  // Verify and restore session from Secure Storage on app start/reload
+  useEffect(() => {
+    let isMounted = true;
+    const initializeSession = async () => {
+      try {
+        const session = await getActiveSession();
+        if (!isMounted) return;
+
+        if (session && session.user && session.token) {
+          setAuthState('AUTHENTICATED');
+          setCurrentUser(session.user);
+          setCurrentScreen('beranda');
+          setActiveTab('beranda');
+          setScreenStack(['beranda']);
+        } else {
+          setAuthState('UNAUTHENTICATED');
+          setCurrentUser(null);
+          setCurrentScreen('login');
+          setScreenStack(['login']);
+        }
+      } catch (error) {
+        if (!isMounted) return;
+        setAuthState('UNAUTHENTICATED');
+        setCurrentUser(null);
+        setCurrentScreen('login');
+        setScreenStack(['login']);
+      }
+    };
+
+    initializeSession();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Navigation helpers with Security Guards
   const navigateTo = (screen, params = {}) => {
     if (params.orderId) {
       setActiveOrderId(params.orderId);
     }
+
+    // Security Guard: unauthenticated users cannot access main application screens
+    if (authState !== 'AUTHENTICATED' && !['login', 'register'].includes(screen)) {
+      setCurrentScreen('login');
+      setScreenStack(['login']);
+      return;
+    }
+
+    // Security Guard: authenticated users should not return to auth screens
+    if (authState === 'AUTHENTICATED' && ['login', 'register'].includes(screen)) {
+      setCurrentScreen('beranda');
+      setActiveTab('beranda');
+      setScreenStack(['beranda']);
+      return;
+    }
+
     if (['beranda', 'aktivitas', 'profil'].includes(screen)) {
       setActiveTab(screen);
       setScreenStack([screen]);
@@ -36,10 +99,26 @@ export const AppProvider = ({ children }) => {
   };
 
   const goBack = () => {
+    // If not authenticated, navigation history is strictly confined to login/register
+    if (authState !== 'AUTHENTICATED') {
+      setCurrentScreen('login');
+      setScreenStack(['login']);
+      return;
+    }
+
     if (screenStack.length > 1) {
       const nextStack = [...screenStack];
       nextStack.pop();
       const prevScreen = nextStack[nextStack.length - 1];
+
+      // Prevent navigating back to login/register while authenticated
+      if (['login', 'register'].includes(prevScreen)) {
+        setCurrentScreen('beranda');
+        setActiveTab('beranda');
+        setScreenStack(['beranda']);
+        return;
+      }
+
       setScreenStack(nextStack);
       setCurrentScreen(prevScreen);
       if (['beranda', 'aktivitas', 'profil'].includes(prevScreen)) {
@@ -52,11 +131,52 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Switch tab directly
+  // Switch tab directly (only accessible when authenticated)
   const switchTab = (tabName) => {
+    if (authState !== 'AUTHENTICATED') {
+      setCurrentScreen('login');
+      setScreenStack(['login']);
+      return;
+    }
     setActiveTab(tabName);
     setCurrentScreen(tabName);
     setScreenStack([tabName]);
+  };
+
+  // Authentication Actions
+  const login = async (identifier, password) => {
+    const result = await authenticateUser(identifier, password);
+    if (result.success) {
+      setAuthState('AUTHENTICATED');
+      setCurrentUser(result.session.user);
+      setSessionClearedMessage(null);
+      setCurrentScreen('beranda');
+      setActiveTab('beranda');
+      setScreenStack(['beranda']);
+      return { success: true };
+    }
+    return { success: false, error: result.error };
+  };
+
+  const register = async (userData) => {
+    return await registerUser(userData);
+  };
+
+  const logout = async () => {
+    await clearActiveSession();
+    setAuthState('UNAUTHENTICATED');
+    setCurrentUser(null);
+    setSessionClearedMessage(
+      'SESSION CLEARED: Sesi Anda telah dihapus secara aman dari Secure Storage.'
+    );
+    setCurrentScreen('login');
+    setScreenStack(['login']);
+    setActiveTab('beranda');
+    return true;
+  };
+
+  const dismissSessionClearedMessage = () => {
+    setSessionClearedMessage(null);
   };
 
   // Cart Operations
@@ -262,8 +382,14 @@ export const AppProvider = ({ children }) => {
         activeOrder,
         createOrder,
         advanceOrderStatus,
-        setOrderStatusDirect,
-        sendChatMessage,
+        // Auth & Security state & methods
+        authState,
+        currentUser,
+        sessionClearedMessage,
+        dismissSessionClearedMessage,
+        login,
+        register,
+        logout,
       }}
     >
       {children}
