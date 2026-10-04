@@ -154,7 +154,7 @@ export const ProfileScreen = () => {
           color={colors.primaryLight}
           style={{ marginRight: 8 }}
         />
-        <Text style={styles.logoutButtonText}>Keluar Akun (Logout)</Text>
+        <Text style={styles.logoutButtonText}>Keluar</Text>
       </TouchableOpacity>
 
       <Text style={styles.versionText}>

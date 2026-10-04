@@ -26,10 +26,11 @@ export const MenuScreen = () => {
     cartTotalCount,
     cartSubtotal,
     navigateTo,
+    selectedCategory,
+    setSelectedCategory,
   } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Semua');
 
   // Filter logic: category & search query
   const filteredMenu = useMemo(() => {

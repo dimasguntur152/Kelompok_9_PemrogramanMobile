@@ -277,10 +277,30 @@ export const OrderTrackScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Bottom Action: "Chat dengan Penjual" */}
+      {/* Bottom Actions */}
       <View style={styles.bottomBar}>
+        {activeOrder.status === 'Selesai' && (
+          <TouchableOpacity
+            style={styles.finishedCtaBtn}
+            onPress={() => navigateTo('order_finished')}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Lihat Halaman Pesanan Selesai"
+          >
+            <Ionicons
+              name="checkmark-done-circle"
+              size={20}
+              color={colors.surface}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.finishedCtaBtnText}>
+              Buka Halaman Pesanan Selesai 🎉
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
-          style={styles.chatBtn}
+          style={activeOrder.status === 'Selesai' ? styles.chatBtnOutline : styles.chatBtn}
           onPress={() => navigateTo('order_chat')}
           activeOpacity={0.85}
           accessibilityRole="button"
@@ -288,11 +308,19 @@ export const OrderTrackScreen = () => {
         >
           <Ionicons
             name="chatbubble-ellipses-outline"
-            size={20}
-            color={colors.surface}
+            size={18}
+            color={activeOrder.status === 'Selesai' ? colors.primary : colors.surface}
             style={{ marginRight: 8 }}
           />
-          <Text style={styles.chatBtnText}>Chat dengan Penjual</Text>
+          <Text
+            style={
+              activeOrder.status === 'Selesai'
+                ? styles.chatBtnTextOutline
+                : styles.chatBtnText
+            }
+          >
+            Chat dengan Penjual
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -564,6 +592,41 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: colors.surface,
+  },
+  finishedCtaBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#15803D',
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginBottom: 8,
+    elevation: 3,
+    shadowColor: '#15803D',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  finishedCtaBtnText: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: colors.surface,
+    letterSpacing: 0.2,
+  },
+  chatBtnOutline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  chatBtnTextOutline: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.primary,
   },
   emptyContainer: {
     flex: 1,

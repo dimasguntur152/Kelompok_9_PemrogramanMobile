@@ -31,14 +31,16 @@ export const Header = ({
             accessibilityLabel="Logo Kedai Tong Djajakarta"
           />
           <View style={styles.homeTitleContainer}>
-            <Text style={styles.greetingText}>Halo, Tong Family!</Text>
-            <Text style={styles.brandTitleText}>Tong Djajakarta</Text>
+            <Text style={styles.brandTitleText}>Kedai Tong Djajakarta</Text>
+            <Text style={styles.brandSubtitleText}>
+              Kampus 3 UMM • GKB 2 Basement
+            </Text>
           </View>
         </View>
 
         <View style={styles.badgeContainer}>
           <View style={styles.badgeDot} />
-          <Text style={styles.badgeText}>GKB 2 Basement</Text>
+          <Text style={styles.badgeText}>Kedai Buka</Text>
         </View>
       </View>
     );
@@ -111,32 +113,38 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   brandTitleText: {
-    fontSize: 17,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '800',
     color: colors.primary,
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
+  },
+  brandSubtitleText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: colors.textMuted,
+    marginTop: 1,
   },
   badgeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.primarySoft,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 16,
+    backgroundColor: '#F0FDF4',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#FED7D7',
+    borderColor: '#BBF7D0',
   },
   badgeDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.primary,
-    marginRight: 6,
+    backgroundColor: '#16A34A',
+    marginRight: 5,
   },
   badgeText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: colors.primary,
+    fontWeight: '700',
+    color: '#15803D',
   },
 
   container: {

@@ -21,6 +21,9 @@ export const AppProvider = ({ children }) => {
   const [activeTab, setActiveTab] = useState('beranda'); // 'beranda' | 'aktivitas' | 'profil'
   const [screenStack, setScreenStack] = useState(['login']);
 
+  // Category Filter State (Active Category for Menu)
+  const [selectedCategory, setSelectedCategory] = useState('Semua');
+
   // Cart State: { [productId]: quantity }
   const [cart, setCart] = useState({});
 
@@ -72,6 +75,9 @@ export const AppProvider = ({ children }) => {
   const navigateTo = (screen, params = {}) => {
     if (params.orderId) {
       setActiveOrderId(params.orderId);
+    }
+    if (params.category) {
+      setSelectedCategory(params.category);
     }
 
     // Security Guard: unauthenticated users cannot access main application screens
@@ -382,6 +388,8 @@ export const AppProvider = ({ children }) => {
         activeOrder,
         createOrder,
         advanceOrderStatus,
+        selectedCategory,
+        setSelectedCategory,
         // Auth & Security state & methods
         authState,
         currentUser,
