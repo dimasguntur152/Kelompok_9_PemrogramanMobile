@@ -14,11 +14,15 @@
     "react-native": "0.86.3",
     "react-native-web": "^0.21.2"
   },
+  "devDependencies": {
+    "json-server": "^0.17.4"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "api": "json-server --watch db.json --port 4000"
   },
   "private": true
 }

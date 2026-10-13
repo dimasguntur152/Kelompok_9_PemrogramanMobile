@@ -1,0 +1,324 @@
+{
+  "menus": [
+    {
+      "id": 1,
+      "name": "Americano",
+      "description": "Espresso yang diencerkan dengan air panas, menghasilkan cita rasa kopi yang kuat dan bersih.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "Americano Mango",
+      "description": "Americano segar dengan perpaduan sirup mangga tropis yang manis dan menyegarkan.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=80",
+      "category": "Kopi",
+      "label": "DARK SERIES",
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "name": "Americano Lycchee",
+      "description": "Americano dengan sentuhan sirup lychee yang eksotis, perpaduan kopi dan buah yang unik.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80",
+      "category": "Kopi",
+      "label": "DARK SERIES",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "name": "Americano Peach",
+      "description": "Americano dengan sirup peach yang harum dan segar, kombinasi sempurna antara pahit dan manis.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80",
+      "category": "Kopi",
+      "label": "DARK SERIES",
+      "status": "active"
+    },
+    {
+      "id": 5,
+      "name": "Hot Americano",
+      "description": "Americano panas klasik, cocok untuk menemani pagi atau sore hari dengan aroma kopi yang khas.",
+      "price": 8000,
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 6,
+      "name": "Kopi Baileys",
+      "description": "Kopi istimewa dengan sentuhan rasa Baileys yang creamy dan lembut, pengalaman minum kopi yang mewah.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "habis"
+    },
+    {
+      "id": 7,
+      "name": "Kopi Crash",
+      "description": "Kopi hitam sederhana dengan cita rasa yang kuat dan autentik, harga terjangkau untuk mahasiswa.",
+      "price": 5000,
+      "image": "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 8,
+      "name": "Kopi Crash Susu",
+      "description": "Kopi crash yang dipadukan dengan susu segar, menghasilkan kopi susu yang creamy dan terjangkau.",
+      "price": 7000,
+      "image": "https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 9,
+      "name": "Kopi Susu Mantap",
+      "description": "Menu favorit Tong Family! Kopi susu dengan komposisi espresso dan susu yang pas, rasa mantap sejati.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+      "category": "Kopi",
+      "label": "FAVORIT!",
+      "status": "active"
+    },
+    {
+      "id": 10,
+      "name": "Kopi Susu Sangar",
+      "description": "Kopi susu dengan karakter yang lebih kuat, untuk kamu yang butuh tenaga ekstra menghadapi hari.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1498804103079-a6351b050096?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 11,
+      "name": "Kopi Susu Legit",
+      "description": "Kopi susu premium dengan rasa yang lebih manis dan legit, sempurna untuk menemani waktu belajarmu.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&q=80",
+      "category": "Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 12,
+      "name": "Bublegum",
+      "description": "Minuman segar dengan rasa bubblegum yang unik dan warna menarik, cocok untuk anak muda.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 13,
+      "name": "Choco Banana",
+      "description": "Minuman coklat lezat yang dipadukan dengan pisang, perpaduan rasa yang creamy dan menyenangkan.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 14,
+      "name": "Cream Cheese",
+      "description": "Minuman segar dengan topping cream cheese yang kaya dan gurih, sensasi rasa yang unik.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 15,
+      "name": "Hot Choco Banana",
+      "description": "Minuman coklat pisang versi panas yang hangat dan nyaman untuk menemani aktivitasmu.",
+      "price": 10000,
+      "image": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 16,
+      "name": "Hot Coklat",
+      "description": "Hot chocolate klasik yang hangat dan lezat, pilihan sempurna untuk menghangatkan hari.",
+      "price": 8000,
+      "image": "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 17,
+      "name": "Coklat",
+      "description": "Minuman coklat dingin yang segar dan kaya rasa, terbuat dari bahan coklat pilihan berkualitas.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1471943038949-fddf2d3d9f9b?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 18,
+      "name": "Hot Matcha",
+      "description": "Matcha panas autentik dengan rasa green tea yang khas dan menenangkan, baik untuk kesehatan.",
+      "price": 8000,
+      "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 19,
+      "name": "Matcha",
+      "description": "Best seller! Minuman matcha dingin yang menyegarkan dengan rasa green tea yang autentik dan premium.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1593443320739-77f74939d0da?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": "BEST SELLER!",
+      "status": "active"
+    },
+    {
+      "id": 20,
+      "name": "Light Spark Lychee",
+      "description": "Minuman sparkling ringan dengan rasa lychee yang segar dan menyegarkan, cocok untuk hari panas.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": "LIGHT SERIES",
+      "status": "active"
+    },
+    {
+      "id": 21,
+      "name": "Light Spark Mango",
+      "description": "Sparkling mango yang menyegarkan dengan rasa mangga tropis yang kuat dan buah-buahan segar.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": "LIGHT SERIES",
+      "status": "active"
+    },
+    {
+      "id": 22,
+      "name": "Light Spark Peach",
+      "description": "Minuman sparkling dengan rasa peach yang manis dan segar, ringan di perut namun kaya rasa.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": "LIGHT SERIES",
+      "status": "active"
+    },
+    {
+      "id": 23,
+      "name": "Milo Malay",
+      "description": "Milo ala Malaysia yang creamy dan lezat, dengan rasa coklat malt yang khas dan sangat digemari.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 24,
+      "name": "Thai Tea",
+      "description": "Thai tea autentik dengan rasa teh yang kuat dan susu kental manis yang khas, langsung dari cita rasa Thailand.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 25,
+      "name": "Mineral Kecil",
+      "description": "Air mineral kemasan kecil 330ml untuk menemani makan atau minum obat.",
+      "price": 2000,
+      "image": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 26,
+      "name": "Mineral Sedang",
+      "description": "Air mineral kemasan sedang 600ml, pilihan ideal untuk menjaga hidrasi sepanjang hari di kampus.",
+      "price": 3000,
+      "image": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80",
+      "category": "Non-Kopi",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 27,
+      "name": "Cemilan Kecil (Mie)",
+      "description": "Cemilan mie kering ukuran kecil yang renyah, teman ngemil sambil belajar atau ngobrol.",
+      "price": 2000,
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&q=80",
+      "category": "Makanan",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 28,
+      "name": "Cemilan Sedang",
+      "description": "Cemilan ukuran sedang yang mengenyangkan, cocok untuk mengisi perut di antara waktu makan.",
+      "price": 3000,
+      "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80",
+      "category": "Makanan",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 29,
+      "name": "Mie Abang Jago",
+      "description": "Mie rebus/goreng spesial yang legendaris dengan bumbu racikan sendiri, lezat dan mengenyangkan.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&q=80",
+      "category": "Makanan",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 30,
+      "name": "Mix Platter",
+      "description": "Piring campur dengan berbagai pilihan gorengan dan cemilan pilihan, cocok untuk dinikmati bersama.",
+      "price": 13000,
+      "image": "https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=400&q=80",
+      "category": "Makanan",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 31,
+      "name": "Nasi Ayam Merah",
+      "description": "Nasi dengan ayam berbumbu merah yang lezat, sajian makan siang atau malam yang mengenyangkan.",
+      "price": 15000,
+      "image": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=80",
+      "category": "Makanan",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 32,
+      "name": "Rokok Surya Ketengan",
+      "description": "Rokok Surya dijual per batang, tersedia di kedai untuk memenuhi kebutuhan Tong Family.",
+      "price": 3000,
+      "image": "https://images.unsplash.com/photo-1527866959252-de636b9b9a3d?w=400&q=80",
+      "category": "Lain-lain",
+      "label": null,
+      "status": "active"
+    }
+  ]
+}

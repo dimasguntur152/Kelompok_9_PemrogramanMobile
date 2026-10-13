@@ -1,3 +1,11 @@
+// ============================================================
+// MenuScreen.js
+// TASK 03 — DISPLAY API DATA
+//
+// Halaman Menu menampilkan data menu dari REST API yang sudah
+// di-fetch dan di-mapping di AppContext/menuService.
+// ============================================================
+
 import React, { useState, useMemo } from 'react';
 import {
   View,
@@ -7,16 +15,16 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  ActivityIndicator,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
-import {
-  INITIAL_MENU,
-  MENU_CATEGORIES,
-  formatRupiah,
-} from '../../data/mockData';
+import { formatRupiah } from '../../data/mockData';
 import { ProductListItem } from '../../components/ProductListItem';
+
+const MENU_CATEGORIES = ['Semua', 'Kopi', 'Non-Kopi', 'Makanan', 'Lain-lain'];
 
 export const MenuScreen = () => {
   const {
@@ -28,25 +36,71 @@ export const MenuScreen = () => {
     navigateTo,
     selectedCategory,
     setSelectedCategory,
+    // Menu state dari REST API
+    menuData,
+    menuLoading,
+    menuError,
+    loadMenus,
   } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter logic: category & search query
+  // Filter logic: category & search query menggunakan data dari API
   const filteredMenu = useMemo(() => {
-    return INITIAL_MENU.filter((item) => {
+    return menuData.filter((item) => {
       // Category match
       const matchCategory =
         selectedCategory === 'Semua' || item.category === selectedCategory;
 
-      // Search match
+      // Search match (nama menu Kedai dari API)
       const query = searchQuery.trim().toLowerCase();
       const matchSearch = query === '' || item.name.toLowerCase().includes(query);
 
       return matchCategory && matchSearch;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, menuData]);
 
+  // -----------------------------------------------------------------------
+  // STATE: Loading
+  // -----------------------------------------------------------------------
+  if (menuLoading) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loadingText}>Memuat menu Kedai Tong Djajakarta...</Text>
+        <Text style={styles.loadingSubText}>Mengambil data dari REST API</Text>
+      </View>
+    );
+  }
+
+  // -----------------------------------------------------------------------
+  // STATE: Error
+  // -----------------------------------------------------------------------
+  if (menuError && menuData.length === 0) {
+    return (
+      <View style={styles.centerContainer}>
+        <View style={styles.errorIconBox}>
+          <Ionicons name="wifi-outline" size={36} color={colors.primary} />
+        </View>
+        <Text style={styles.errorTitle}>Gagal Memuat Menu</Text>
+        <Text style={styles.errorMessage}>{menuError}</Text>
+        <TouchableOpacity
+          style={styles.retryButton}
+          onPress={loadMenus}
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Coba lagi memuat menu"
+        >
+          <Ionicons name="refresh-outline" size={16} color={colors.surface} />
+          <Text style={styles.retryButtonText}>Coba Lagi</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // -----------------------------------------------------------------------
+  // STATE: Data tersedia — tampilkan menu
+  // -----------------------------------------------------------------------
   return (
     <View style={styles.container}>
       {/* Subtitle */}
@@ -54,6 +108,11 @@ export const MenuScreen = () => {
         <Text style={styles.subtitleText}>
           Pilihan menu Tong Djajakarta untuk menemani aktivitasmu.
         </Text>
+        {menuData.length > 0 && (
+          <Text style={styles.apiNote}>
+            {menuData.length} menu tersedia dari REST API
+          </Text>
+        )}
       </View>
 
       {/* Search Bar */}
@@ -126,11 +185,11 @@ export const MenuScreen = () => {
         </ScrollView>
       </View>
 
-      {/* Menu List */}
+      {/* Menu List — Data dari REST API */}
       {filteredMenu.length > 0 ? (
         <FlatList
           data={filteredMenu}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <ProductListItem
               item={item}
@@ -188,6 +247,65 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  // Loading & Error states
+  centerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    backgroundColor: colors.background,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
+  loadingSubText: {
+    marginTop: 6,
+    fontSize: 12,
+    color: colors.textMuted,
+    textAlign: 'center',
+  },
+  errorIconBox: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.primarySoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  errorTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.textPrimary,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  errorMessage: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 24,
+  },
+  retryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 10,
+    gap: 8,
+  },
+  retryButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.surface,
+  },
+  // Normal screen styles
   subtitleHeader: {
     paddingHorizontal: 16,
     paddingTop: 12,
@@ -198,6 +316,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textSecondary,
     lineHeight: 18,
+  },
+  apiNote: {
+    fontSize: 11,
+    color: colors.textMuted,
+    marginTop: 2,
   },
   searchWrapper: {
     paddingHorizontal: 16,

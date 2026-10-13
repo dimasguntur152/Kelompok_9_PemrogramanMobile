@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
-import { INITIAL_MENU, INITIAL_ORDERS, KEDAI_INFO } from '../data/mockData';
+import { INITIAL_ORDERS, KEDAI_INFO } from '../data/mockData';
+import { fetchMenus } from '../services/menuService';
 import {
   getActiveSession,
   clearActiveSession,
@@ -23,6 +24,11 @@ export const AppProvider = ({ children }) => {
 
   // Category Filter State (Active Category for Menu)
   const [selectedCategory, setSelectedCategory] = useState('Semua');
+
+  // Menu State (dari REST API JSON Server)
+  const [menuData, setMenuData] = useState([]);
+  const [menuLoading, setMenuLoading] = useState(false);
+  const [menuError, setMenuError] = useState(null);
 
   // Cart State: { [productId]: quantity }
   const [cart, setCart] = useState({});
@@ -69,6 +75,27 @@ export const AppProvider = ({ children }) => {
     return () => {
       isMounted = false;
     };
+  }, []);
+
+  // -----------------------------------------------------------------------
+  // TASK 02 — FETCH MENU DARI REST API
+  // Dijalankan saat komponen mount. Menggunakan fetchMenus() dari menuService.
+  // -----------------------------------------------------------------------
+  const loadMenus = async () => {
+    setMenuLoading(true);
+    setMenuError(null);
+    const result = await fetchMenus();
+    if (result.data !== null) {
+      setMenuData(result.data);
+      setMenuError(null);
+    } else {
+      setMenuError(result.error);
+    }
+    setMenuLoading(false);
+  };
+
+  useEffect(() => {
+    loadMenus();
   }, []);
 
   // Navigation helpers with Security Guards
@@ -187,8 +214,9 @@ export const AppProvider = ({ children }) => {
 
   // Cart Operations
   const addToCart = (productId) => {
-    const item = INITIAL_MENU.find((m) => m.id === productId);
-    if (!item || !item.available) return;
+    // Cari item di menuData (dari API). Fallback ke available=true jika item tidak ditemukan
+    const item = menuData.find((m) => m.id === productId);
+    if (item && !item.available) return;
 
     setCart((prev) => ({
       ...prev,
@@ -215,10 +243,10 @@ export const AppProvider = ({ children }) => {
     setCart({});
   };
 
-  // Computed Cart Items
+  // Computed Cart Items — gunakan menuData dari API
   const cartItems = useMemo(() => {
     return Object.keys(cart).map((id) => {
-      const product = INITIAL_MENU.find((p) => p.id === id);
+      const product = menuData.find((p) => p.id === id);
       const qty = cart[id];
       return {
         ...product,
@@ -226,7 +254,7 @@ export const AppProvider = ({ children }) => {
         subtotal: (product?.price || 0) * qty,
       };
     });
-  }, [cart]);
+  }, [cart, menuData]);
 
   const cartTotalCount = useMemo(() => {
     return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
@@ -367,6 +395,11 @@ export const AppProvider = ({ children }) => {
         navigateTo,
         goBack,
         switchTab,
+        // Menu state dari REST API
+        menuData,
+        menuLoading,
+        menuError,
+        loadMenus,
         cart,
         cartItems,
         cartTotalCount,

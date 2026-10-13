@@ -16,12 +16,14 @@ Berkat proposal yang matang dan perencanaan yang rapi, kami berhasil menjadi sal
   defaultDeliveryFee: 3000, // Mock delivery fee yang mudah diubah pada code
 };
 
+// Kategori menu — dipakai sebagai referensi UI
+// Data aktual kini berasal dari REST API via menuService.js
 export const MENU_CATEGORIES = [
   'Semua',
   'Kopi',
   'Non-Kopi',
   'Makanan',
-  'Lainnya',
+  'Lain-lain',
 ];
 
 export const INITIAL_MENU = [
@@ -291,7 +293,7 @@ export const INITIAL_MENU = [
   {
     id: 'lain-1',
     name: 'Rokok Surya Ketengan',
-    category: 'Lainnya',
+    category: 'Lain-lain',
     price: 3000,
     label: null,
     available: true,

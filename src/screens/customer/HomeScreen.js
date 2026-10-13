@@ -13,12 +13,11 @@ import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
 import {
   KEDAI_INFO,
-  INITIAL_MENU,
   formatRupiah,
 } from '../../data/mockData';
 
 export const HomeScreen = () => {
-  const { navigateTo, addToCart, removeFromCart, cart } = useApp();
+  const { navigateTo, addToCart, removeFromCart, cart, menuData } = useApp();
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [carouselWidth, setCarouselWidth] = useState(360);
@@ -64,14 +63,19 @@ export const HomeScreen = () => {
     { id: 'Kopi', name: 'Kopi', icon: 'cafe-outline' },
     { id: 'Non-Kopi', name: 'Non-Kopi', icon: 'color-filter-outline' },
     { id: 'Makanan', name: 'Makanan', icon: 'restaurant-outline' },
-    { id: 'Lainnya', name: 'Lainnya', icon: 'ellipsis-horizontal-circle-outline' },
+    { id: 'Lain-lain', name: 'Lain-lain', icon: 'ellipsis-horizontal-circle-outline' },
   ];
 
-  // 3. Curated Popular Drinks / Best Seller from exact Kedai Tong Djajakarta menu
-  const popularItemIds = ['kopi-9', 'nonkopi-8', 'kopi-1', 'kopi-11', 'nonkopi-2'];
-  const popularDrinks = popularItemIds
-    .map((id) => INITIAL_MENU.find((item) => item.id === id))
-    .filter(Boolean);
+  // 3. Curated Popular Drinks dari menuData API
+  // ID '9'  = Kopi Susu Mantap (FAVORIT!)
+  // ID '19' = Matcha (BEST SELLER!)
+  // ID '1'  = Americano
+  // ID '11' = Kopi Susu Legit
+  // ID '13' = Choco Banana
+  const popularItemIds = ['9', '19', '1', '11', '13'];
+  const popularDrinks = menuData.length > 0
+    ? popularItemIds.map((id) => menuData.find((item) => item.id === id)).filter(Boolean)
+    : [];
 
   const handleCategoryPress = (categoryName) => {
     navigateTo('menu', { category: categoryName });
