@@ -279,7 +279,7 @@ export const LoginScreen = () => {
           </View>
           <Text style={styles.demoDesc}>
             Email: <Text style={styles.demoVal}>civitas@umm.ac.id</Text>
-            {'\n'}Password: <Text style={styles.demoVal}>KedaiTong123</Text>
+            {'\n'}Password: <Text style={styles.demoVal}>••••••••••••</Text> (Tersamar demi keamanan)
           </Text>
           <TouchableOpacity
             style={styles.quickFillButton}
@@ -299,7 +299,7 @@ export const LoginScreen = () => {
         </View>
 
         <Text style={styles.footerNote}>
-          Kedai Tong Djajakarta • Pertemuan 3 Security & Authentication
+          Kedai Tong Djajakarta • Week 5 Token-Based Secure Authentication
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>

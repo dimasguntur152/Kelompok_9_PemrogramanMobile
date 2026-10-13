@@ -354,7 +354,7 @@ export const RegisterScreen = () => {
               style={{ marginRight: 6 }}
             />
             <Text style={styles.securityNoteText}>
-              Kredensial Anda dienkripsi secara lokal menggunakan hashing SHA-256 dan disimpan di Secure Storage.
+              Kredensial akun Anda diamankan menggunakan password hashing bcrypt standar industri di server.
             </Text>
           </View>
 

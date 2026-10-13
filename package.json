@@ -5,10 +5,13 @@
   "dependencies": {
     "@expo/metro-runtime": "~57.0.16",
     "@expo/vector-icons": "^15.0.2",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.7",
     "expo": "~57.0.25",
     "expo-font": "~57.0.4",
     "expo-secure-store": "~57.0.4",
     "expo-status-bar": "~57.0.1",
+    "jsonwebtoken": "^9.0.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
@@ -22,7 +25,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "api": "json-server --watch db.json --port 4000"
+    "api": "node server.js",
+    "test": "node scripts/securityTests.js && node scripts/flowTests.js",
+    "test:security": "node scripts/securityTests.js",
+    "test:flow": "node scripts/flowTests.js"
   },
   "private": true
 }

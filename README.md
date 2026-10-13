@@ -67,25 +67,46 @@ Aplikasi ini berfokus **HANYA UNTUK CUSTOMER / PEMBELI** (mahasiswa, dosen, pega
 
 ---
 
-## 🛠️ Cara Menjalankan Aplikasi
+## 🔐 Keamanan & Autentikasi (Week 5: Secure API)
 
-Pastikan berada di folder project:
+Aplikasi Kedai Tong Djajakarta telah mengimplementasikan arsitektur keamanan berbasis token (**Token-Based Authentication**):
+1. **Password Hashing (Server-side)**: Password pengguna diamankan dengan salt rounds 10 menggunakan `bcryptjs`. Tidak ada password dalam bentuk plain text yang disimpan di database `db.json`.
+2. **Perlindungan Data Kredensial**: Respons endpoint Register (`POST /register`), Login (`POST /login`), dan Profil (`GET /profile`) tidak pernah menyertakan password atau hash password. UI dan log aplikasi bersih dari ekspos kredensial rahasia.
+3. **JWT Access Token**: Login berhasil menerbitkan JSON Web Token (JWT) yang ditandatangani menggunakan secret key di backend (`JWT_SECRET`).
+4. **Penyimpanan Token Aman**: Access token disimpan di client menggunakan `expo-secure-store` (iOS Keychain / Android Keystore dengan fallback web aman).
+5. **Attach Token to API Request**: Permintaan ke endpoint terlindungi (`GET /profile`, `POST /orders`, `GET /orders`) menyertakan header `Authorization: Bearer <access_token>`.
+6. **Proteksi & Revokasi Sesi**: Logout mencabut token di server (`POST /logout`), menghapus token dari SecureStore, dan backend menolak penggunaan ulang token lama.
+7. **REST API Menu**: Endpoint `GET /menus` dari Week 4 tetap publik dan menyajikan seluruh 32 menu otentik Kedai Tong Djajakarta.
+
+---
+
+## 🛠️ Cara Menjalankan Project
+
+### 1. Menjalankan Backend Server (Port 4000)
+Backend menyediakan REST API menu, registrasi, autentikasi JWT, verifikasi profil, dan pencabutan token.
 ```bash
-cd "C:\Users\Dimas Guntur\.gemini\antigravity-ide\scratch\kedai-tong-djajakarta"
+npm run api
 ```
+Server akan berjalan di `http://localhost:4000`.
 
-### Menjalankan di Browser (Web Preview)
-Aplikasi sudah siap dijalankan dengan frame mobile interaktif di browser web:
+### 2. Menjalankan Frontend Expo
+- **Web Browser**:
+  ```bash
+  npm run web
+  ```
+- **Expo Go (Ponsel Fisik Android / iOS)**:
+  ```bash
+  npm run start
+  ```
+  Pindai kode QR yang muncul di terminal menggunakan aplikasi **Expo Go**.
+
+### 3. Menjalankan Pengujian Otomatis (17 Kriteria Wajib)
+Jalankan seluruh test suite keamanan dan alur aplikasi:
 ```bash
-npx expo start --web
+npm test
 ```
-Buka tautan: [http://localhost:8081](http://localhost:8081)
-
-Tersedia **Toolbar Uji Layar Responsif** di bagian atas (Layar Kecil 360px, Normal 400px, Tablet 720px, dan Penuh 100%).
-
-### Menjalankan di Ponsel Fisik (Android / iOS)
-Jalankan perintah berikut:
+Atau secara spesifik:
 ```bash
-npx expo start
+npm run test:security   # Pengujian 17 kriteria keamanan Week 5
+npm run test:flow       # Pengujian 14 skenario alur customer
 ```
-Buka aplikasi **Expo Go** di smartphone Anda, lalu pindai kode QR yang muncul di terminal.

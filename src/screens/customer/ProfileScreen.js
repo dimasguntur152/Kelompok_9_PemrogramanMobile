@@ -65,12 +65,16 @@ export const ProfileScreen = () => {
           </View>
         </View>
         <View style={styles.securityRow}>
-          <Text style={styles.securityLabel}>Penyimpanan:</Text>
+          <Text style={styles.securityLabel}>Penyimpanan Token:</Text>
           <Text style={styles.securityVal}>Expo SecureStore</Text>
         </View>
+        <View style={styles.securityRow}>
+          <Text style={styles.securityLabel}>Tipe Token:</Text>
+          <Text style={styles.securityVal}>JWT (Bearer Token)</Text>
+        </View>
         <View style={[styles.securityRow, { borderBottomWidth: 0 }]}>
-          <Text style={styles.securityLabel}>Enkripsi Kredensial:</Text>
-          <Text style={styles.securityVal}>Salted SHA-256 Hashing</Text>
+          <Text style={styles.securityLabel}>Keamanan Password:</Text>
+          <Text style={styles.securityVal}>Bcrypt Hashing (Server-Side)</Text>
         </View>
       </View>
 

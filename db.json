@@ -320,5 +320,48 @@
       "label": null,
       "status": "active"
     }
-  ]
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Naufal Atha",
+      "email": "civitas@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$r/Dfd1kE.gWjnoMTNacoWeUT4uXGIJbKPjjsH0uc1scUxQT/yN3Tu",
+      "createdAt": "2026-09-29T00:00:00.000Z"
+    },
+    {
+      "id": 1791884716801,
+      "name": "Mahasiswa UMM 1791884716705",
+      "email": "mahasiswa_1791884716705@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$DLoBLVw62Zzsap4FNXSP0.rjAG/8SL1.c5JJGpAPnk9gk3.JKW4WW",
+      "createdAt": "2026-10-13T09:45:16.801Z"
+    },
+    {
+      "id": 1791884850182,
+      "name": "Mahasiswa UMM 1791884850083",
+      "email": "mahasiswa_1791884850083@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$9dmO72eFqjGNY3l8762OKeZcl09/NAr9key9DvhCyn87xaCfYc3Q2",
+      "createdAt": "2026-10-13T09:47:30.182Z"
+    },
+    {
+      "id": 1791885516147,
+      "name": "Mahasiswa UMM 1791885516051",
+      "email": "mahasiswa_1791885516051@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$sKC34H9Nl5nh4LpEKgudJuTRGHn/QeBqh0iw9fhbY/OD6qqIC1xbK",
+      "createdAt": "2026-10-13T09:58:36.147Z"
+    },
+    {
+      "id": 1791885528621,
+      "name": "Mahasiswa UMM 1791885528524",
+      "email": "mahasiswa_1791885528524@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$4eSOUO/0yY6gqfVggUuf5.TXNrKdvs3vNitC5F2dj6hEyMo3HdDp6",
+      "createdAt": "2026-10-13T09:58:48.621Z"
+    }
+  ],
+  "orders": []
 }
