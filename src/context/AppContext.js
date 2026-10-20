@@ -26,9 +26,11 @@ export const AppProvider = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState('Semua');
 
   // Menu State (dari REST API JSON Server)
+  // PERTEMUAN 6: Task 1 (API Error), Task 2 (Loading & Retry), Task 3 (Offline)
   const [menuData, setMenuData] = useState([]);
   const [menuLoading, setMenuLoading] = useState(false);
   const [menuError, setMenuError] = useState(null);
+  const [menuErrorDetails, setMenuErrorDetails] = useState(null);
 
   // Cart State: { [productId]: quantity }
   const [cart, setCart] = useState({});
@@ -78,20 +80,48 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   // -----------------------------------------------------------------------
-  // TASK 02 — FETCH MENU DARI REST API
-  // Dijalankan saat komponen mount. Menggunakan fetchMenus() dari menuService.
+  // PERTEMUAN 6: TASK 1 (API ERROR), TASK 2 (LOADING/RETRY), TASK 3 (OFFLINE)
+  // Alur: REQUEST -> LOADING -> SUCCESS / ERROR -> RETRY (Coba Lagi)
   // -----------------------------------------------------------------------
-  const loadMenus = async () => {
+  const loadMenus = async (options = {}) => {
+    // 1. Sebelum request: siapkan state dengan benar (reset error, nyalakan loading)
     setMenuLoading(true);
     setMenuError(null);
-    const result = await fetchMenus();
-    if (result.data !== null) {
-      setMenuData(result.data);
-      setMenuError(null);
-    } else {
-      setMenuError(result.error);
+    setMenuErrorDetails(null);
+
+    try {
+      // 2. Kirim request API ke /menus
+      const result = await fetchMenus(options);
+
+      // 3. Jika HTTP 2xx: parsing JSON, mapping berhasil, simpan & tampilkan data menu
+      if (result.data !== null && !result.error) {
+        setMenuData(result.data);
+        setMenuError(null);
+        setMenuErrorDetails(null);
+      } else {
+        // 4. Jika response 4xx, 5xx, atau network/offline error:
+        // ATURAN: "Data tidak boleh ditampilkan ketika request gagal."
+        setMenuData([]);
+        setMenuError(result.error || 'Terjadi kesalahan saat memuat menu. Silakan coba lagi.');
+        setMenuErrorDetails({
+          status: result.status,
+          errorType: result.errorType,
+          isOffline: result.isOffline || false,
+        });
+      }
+    } catch (err) {
+      // Tangani exception tak terduga agar aplikasi tidak crash
+      setMenuData([]);
+      setMenuError('Terjadi kesalahan saat memuat menu. Silakan coba lagi.');
+      setMenuErrorDetails({
+        status: null,
+        errorType: 'UNKNOWN',
+        isOffline: false,
+      });
+    } finally {
+      // 5. Matikan loading indicator setelah proses selesai
+      setMenuLoading(false);
     }
-    setMenuLoading(false);
   };
 
   useEffect(() => {
@@ -399,6 +429,7 @@ export const AppProvider = ({ children }) => {
         menuData,
         menuLoading,
         menuError,
+        menuErrorDetails,
         loadMenus,
         cart,
         cartItems,

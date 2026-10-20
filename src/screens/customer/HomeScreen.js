@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../context/AppContext';
@@ -17,7 +18,17 @@ import {
 } from '../../data/mockData';
 
 export const HomeScreen = () => {
-  const { navigateTo, addToCart, removeFromCart, cart, menuData } = useApp();
+  const {
+    navigateTo,
+    addToCart,
+    removeFromCart,
+    cart,
+    menuData,
+    menuLoading,
+    menuError,
+    menuErrorDetails,
+    loadMenus,
+  } = useApp();
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [carouselWidth, setCarouselWidth] = useState(360);
@@ -237,11 +248,42 @@ export const HomeScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.popularScrollContent}
-        >
+        {menuLoading && popularDrinks.length === 0 ? (
+          <View style={styles.popularFeedbackBox}>
+            <ActivityIndicator size="small" color={colors.primary} />
+            <Text style={styles.popularLoadingText}>
+              Memuat data...
+            </Text>
+          </View>
+        ) : menuError && popularDrinks.length === 0 ? (
+          <View style={styles.popularFeedbackBox}>
+            <Ionicons
+              name={
+                menuErrorDetails?.errorType === 'OFFLINE' || menuErrorDetails?.isOffline
+                  ? 'cloud-offline-outline'
+                  : menuErrorDetails?.errorType === 'SERVER_UNREACHABLE'
+                  ? 'cloud-offline'
+                  : 'alert-circle-outline'
+              }
+              size={24}
+              color={colors.primary}
+            />
+            <Text style={styles.popularErrorText}>{menuError}</Text>
+            <TouchableOpacity
+              style={styles.popularRetryBtn}
+              onPress={() => loadMenus()}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="refresh-outline" size={13} color={colors.surface} />
+              <Text style={styles.popularRetryText}>Coba Lagi</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.popularScrollContent}
+          >
           {popularDrinks.map((item) => {
             const itemQty = cart[item.id] || 0;
             const isBestSeller =
@@ -343,6 +385,7 @@ export const HomeScreen = () => {
             );
           })}
         </ScrollView>
+        )}
       </View>
 
       {/* ================================================== */}
@@ -1032,6 +1075,43 @@ const styles = StyleSheet.create({
   },
   modalCloseActionText: {
     fontSize: 14,
+    fontWeight: '700',
+    color: colors.surface,
+  },
+  popularFeedbackBox: {
+    padding: 20,
+    marginHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  popularLoadingText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: '500',
+  },
+  popularErrorText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  popularRetryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 8,
+    marginTop: 4,
+  },
+  popularRetryText: {
+    fontSize: 12,
     fontWeight: '700',
     color: colors.surface,
   },

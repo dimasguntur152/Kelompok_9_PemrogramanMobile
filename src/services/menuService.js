@@ -81,83 +81,265 @@ const mapToMenuItem = (raw) => {
 
 // ---------------------------------------------------------------------------
 // FETCH MENUS — HTTP GET /menus
-// TASK 02 — CONNECT KEDAI TONG DJAJAKARTA TO REST API
+// PERTEMUAN 6: TASK 1 (API ERROR), TASK 2 (LOADING/RETRY), TASK 3 (OFFLINE)
 // ---------------------------------------------------------------------------
+
+let simulatedOffline = false;
+
+/**
+ * Helper untuk menyimulasikan mode offline saat testing/pengujian.
+ * @param {boolean} value 
+ */
+export const setSimulatedOffline = (value) => {
+  simulatedOffline = Boolean(value);
+};
+
+export const getSimulatedOffline = () => simulatedOffline;
 
 /**
  * Mengambil seluruh data menu dari REST API JSON Server.
  *
- * Alur:
- *   HTTP GET /menus
- *     → periksa response.ok
- *     → response.json()
- *     → validasi struktur array
- *     → mapping tiap item ke MenuItem
- *     → return { data, error, count }
+ * Alur Penanganan Respon (Pertemuan 6):
+ *   1. Loading State & Simulasi Delay Demo (Task 02)
+ *   2. Deteksi Jaringan & Status Offline Sebenarnya (Task 03)
+ *   3. Evaluasi Status Response Sebelum Data Digunakan (Task 01):
+ *      - HTTP 2xx: Request berhasil → parse JSON, mapping MenuItem, kembalikan data
+ *      - HTTP 4xx: Client Error (400, 401, 403, 404) → "Permintaan tidak dapat diproses."
+ *      - HTTP 5xx: Server Error (500, 503) → "Terjadi masalah pada server. Silakan coba lagi."
+ *   4. Kegagalan Koneksi (Catch):
+ *      - Benar-benar Offline: "Tidak ada koneksi internet. Periksa koneksi Anda dan coba lagi."
+ *      - Server/API localhost:4000 Mati: "Gagal terhubung ke server. Silakan coba lagi."
  *
- * @returns {Promise<{data: MenuItem[]|null, error: string|null, count: number}>}
+ * @param {Object} [options]
+ * @param {string} [options.url] - URL override (misal untuk simulasi query param ?simulate_error=500)
+ * @param {boolean} [options.simulateOffline] - Opsi simulasi mode offline
+ * @param {number} [options.timeoutMs] - Batas waktu request (default: 8000ms)
+ * @param {number} [options.demoDelayMs] - Delay simulasi loading untuk demo (default: 450ms)
+ * @returns {Promise<{
+ *   data: MenuItem[]|null,
+ *   error: string|null,
+ *   count: number,
+ *   status: number|null,
+ *   errorType: 'OFFLINE'|'SERVER_UNREACHABLE'|'CLIENT_ERROR'|'SERVER_ERROR'|'PARSE_ERROR'|'UNKNOWN'|null,
+ *   isOffline: boolean
+ * }>}
  */
-export const fetchMenus = async () => {
-  try {
-    const url = `${API_BASE_URL}/menus`;
+export const fetchMenus = async (options = {}) => {
+  const {
+    url = `${API_BASE_URL}/menus`,
+    simulateOffline: optionSimulateOffline,
+    timeoutMs = 8000,
+    demoDelayMs = 450,
+  } = options;
 
-    const response = await fetch(url, {
+  // -------------------------------------------------------------------------
+  // 1. DEMO LOADING SIMULATION DELAY (TASK 02)
+  // Menambahkan jeda singkat (~450ms) khusus agar ActivityIndicator dan teks
+  // "Memuat data..." dapat diamati dengan jelas saat demo di localhost (yang biasanya <5ms).
+  // Nilai ini dapat dinonaktifkan dengan { demoDelayMs: 0 } saat unit testing.
+  // -------------------------------------------------------------------------
+  if (demoDelayMs > 0) {
+    await new Promise((resolve) => setTimeout(resolve, demoDelayMs));
+  }
+
+  // -------------------------------------------------------------------------
+  // 2. DETEKSI STATUS OFFLINE SEBENARNYA (TASK 03)
+  // Memeriksa apakah perangkat benar-benar offline (tanpa koneksi jaringan/internet)
+  // -------------------------------------------------------------------------
+  const isOfflineDetected =
+    optionSimulateOffline === true ||
+    simulatedOffline === true ||
+    (typeof navigator !== 'undefined' && navigator.onLine === false);
+
+  if (isOfflineDetected) {
+    return {
+      data: null,
+      error: 'Tidak ada koneksi internet. Periksa koneksi Anda dan coba lagi.',
+      count: 0,
+      status: null,
+      errorType: 'OFFLINE',
+      isOffline: true,
+    };
+  }
+
+  // -------------------------------------------------------------------------
+  // 3. TIMEOUT PROTECTION DENGAN ABORT CONTROLLER
+  // Mencegah loading terus-menerus tanpa batas ketika jaringan macet
+  // -------------------------------------------------------------------------
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  let timeoutId = null;
+
+  if (controller && timeoutMs > 0) {
+    timeoutId = setTimeout(() => {
+      try {
+        controller.abort();
+      } catch {}
+    }, timeoutMs);
+  }
+
+  try {
+    const fetchOptions = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-    });
+      ...(controller ? { signal: controller.signal } : {}),
+    };
 
-    // Periksa response.ok (status 200-299)
-    if (!response.ok) {
+    const response = await fetch(url, fetchOptions);
+
+    if (timeoutId) clearTimeout(timeoutId);
+
+    // -----------------------------------------------------------------------
+    // 4. PEMERIKSAAN STATUS RESPONSE SEBELUM DATA DIGUNAKAN (TASK 01)
+    // -----------------------------------------------------------------------
+    const status = response.status;
+
+    // A. HTTP 2xx: Request Berhasil
+    if (response.ok) {
+      const json = await response.json();
+      const rawArray = Array.isArray(json) ? json : (json?.menus ?? []);
+
+      if (!Array.isArray(rawArray) || rawArray.length === 0) {
+        return {
+          data: [],
+          error: null,
+          count: 0,
+          status,
+          errorType: null,
+          isOffline: false,
+        };
+      }
+
+      const menus = rawArray.map(mapToMenuItem);
+      return {
+        data: menus,
+        error: null,
+        count: menus.length,
+        status,
+        errorType: null,
+        isOffline: false,
+      };
+    }
+
+    // B. HTTP 4xx: Client Error
+    if (status >= 400 && status < 500) {
+      let clientErrorMessage;
+      if (status === 401) {
+        clientErrorMessage = 'Sesi Anda tidak valid. Silakan login kembali.';
+      } else if (status === 404) {
+        clientErrorMessage = 'Data menu tidak ditemukan.';
+      } else if (status === 400) {
+        clientErrorMessage = 'Permintaan tidak dapat diproses. Silakan coba lagi.';
+      } else if (status === 403) {
+        clientErrorMessage = 'Akses ke data menu ditolak. Silakan coba lagi.';
+      } else {
+        clientErrorMessage = 'Permintaan tidak dapat diproses. Silakan coba lagi.';
+      }
+
       return {
         data: null,
-        error: `Gagal mengambil data menu. Server merespons dengan status ${response.status}: ${response.statusText}`,
+        error: clientErrorMessage,
         count: 0,
+        status,
+        errorType: 'CLIENT_ERROR',
+        isOffline: false,
       };
     }
 
-    // Parse JSON dari response body
-    const json = await response.json();
-
-    // JSON Server pada endpoint /menus mengembalikan array langsung
-    // Validasi bahwa respons adalah array
-    const rawArray = Array.isArray(json) ? json : (json?.menus ?? []);
-
-    if (!Array.isArray(rawArray) || rawArray.length === 0) {
+    // C. HTTP 5xx: Server Error
+    if (status >= 500 && status < 600) {
       return {
-        data: [],
-        error: null,
+        data: null,
+        error: 'Terjadi masalah pada server. Silakan coba lagi.',
         count: 0,
+        status,
+        errorType: 'SERVER_ERROR',
+        isOffline: false,
       };
     }
 
-    // Mapping setiap item ke model MenuItem
-    const menus = rawArray.map(mapToMenuItem);
-
-    return {
-      data: menus,
-      error: null,
-      count: menus.length,
-    };
-  } catch (err) {
-    // Network error atau JSON parse error
-    let errorMessage = 'Tidak dapat terhubung ke server menu Kedai.';
-
-    if (err.name === 'TypeError' && err.message.includes('Network request failed')) {
-      errorMessage =
-        'Koneksi ke server menu gagal. Pastikan JSON Server sudah berjalan di port 4000.\n\n' +
-        'Jalankan: npm run api\n\n' +
-        'Jika menggunakan HP fisik, ubah BASE_URL di menuService.js dengan IP LAN komputer Anda.';
-    } else if (err instanceof SyntaxError) {
-      errorMessage = 'Format data dari server tidak valid. Pastikan db.json berisi JSON yang benar.';
-    }
-
+    // D. Status Tak Terduga Lainnya
     return {
       data: null,
-      error: errorMessage,
+      error: 'Terjadi kesalahan saat memuat menu. Silakan coba lagi.',
       count: 0,
+      status,
+      errorType: 'UNKNOWN',
+      isOffline: false,
+    };
+  } catch (err) {
+    if (timeoutId) clearTimeout(timeoutId);
+
+    // -----------------------------------------------------------------------
+    // 5. PENANGANAN OFFLINE VS SERVER MATI (TASK 01 & TASK 03)
+    // -----------------------------------------------------------------------
+    // A. Periksa apakah perangkat offline saat exception terjadi
+    const isActuallyOffline =
+      (typeof navigator !== 'undefined' && navigator.onLine === false) ||
+      simulatedOffline === true ||
+      optionSimulateOffline === true;
+
+    if (isActuallyOffline) {
+      return {
+        data: null,
+        error: 'Tidak ada koneksi internet. Periksa koneksi Anda dan coba lagi.',
+        count: 0,
+        status: null,
+        errorType: 'OFFLINE',
+        isOffline: true,
+      };
+    }
+
+    // B. AbortError / Timeout
+    if (err.name === 'AbortError') {
+      return {
+        data: null,
+        error: 'Gagal terhubung ke server. Silakan coba lagi.',
+        count: 0,
+        status: null,
+        errorType: 'SERVER_UNREACHABLE',
+        isOffline: false,
+      };
+    }
+
+    // C. Backend / API localhost:4000 mati (Koneksi jaringan ada, tapi server tidak berjalan)
+    const isConnectionError =
+      err.name === 'TypeError' ||
+      /network|failed to fetch|econnrefused|aborted|connect/i.test(err.message || '');
+
+    if (isConnectionError) {
+      return {
+        data: null,
+        error: 'Gagal terhubung ke server. Silakan coba lagi.',
+        count: 0,
+        status: null,
+        errorType: 'SERVER_UNREACHABLE',
+        isOffline: false,
+      };
+    }
+
+    // D. JSON Syntax Error
+    if (err instanceof SyntaxError) {
+      return {
+        data: null,
+        error: 'Terjadi kesalahan saat memproses data menu. Silakan coba lagi.',
+        count: 0,
+        status: null,
+        errorType: 'PARSE_ERROR',
+        isOffline: false,
+      };
+    }
+
+    // E. General Fallback
+    return {
+      data: null,
+      error: 'Terjadi kesalahan saat memuat menu. Silakan coba lagi.',
+      count: 0,
+      status: null,
+      errorType: 'UNKNOWN',
+      isOffline: false,
     };
   }
 };

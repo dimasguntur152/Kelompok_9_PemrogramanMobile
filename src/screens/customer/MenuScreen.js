@@ -40,6 +40,7 @@ export const MenuScreen = () => {
     menuData,
     menuLoading,
     menuError,
+    menuErrorDetails,
     loadMenus,
   } = useApp();
 
@@ -61,32 +62,79 @@ export const MenuScreen = () => {
   }, [searchQuery, selectedCategory, menuData]);
 
   // -----------------------------------------------------------------------
-  // STATE: Loading
+  // STATE: Loading (TASK 2 — Feedback saat request API berlangsung)
   // -----------------------------------------------------------------------
   if (menuLoading) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Memuat menu Kedai Tong Djajakarta...</Text>
-        <Text style={styles.loadingSubText}>Mengambil data dari REST API</Text>
+        <Text style={styles.loadingText}>Memuat data...</Text>
+        <Text style={styles.loadingSubText}>Menghubungkan ke server Kedai Tong Djajakarta</Text>
       </View>
     );
   }
 
   // -----------------------------------------------------------------------
-  // STATE: Error
+  // STATE: Error & Offline (TASK 1, TASK 2, TASK 3)
+  // Data tidak ditampilkan ketika request gagal; sediakan tombol "Coba Lagi"
   // -----------------------------------------------------------------------
-  if (menuError && menuData.length === 0) {
+  if (menuError) {
+    const errorType = menuErrorDetails?.errorType;
+    const isOffline = errorType === 'OFFLINE' || menuErrorDetails?.isOffline === true;
+    const isServerUnreachable = errorType === 'SERVER_UNREACHABLE';
+    const isServerError =
+      errorType === 'SERVER_ERROR' ||
+      (menuErrorDetails?.status >= 500 && menuErrorDetails?.status < 600);
+    const isAuthError = menuErrorDetails?.status === 401;
+    const isNotFound = menuErrorDetails?.status === 404;
+
+    let iconName = 'alert-circle-outline';
+    let iconColor = colors.primary;
+    let iconBoxStyle = styles.errorIconBox;
+    let errorTitle = 'Gagal Memuat Menu';
+
+    if (isOffline) {
+      iconName = 'cloud-offline-outline';
+      iconColor = '#B45309';
+      iconBoxStyle = [styles.errorIconBox, styles.offlineIconBox];
+      errorTitle = 'Tidak Ada Koneksi Internet';
+    } else if (isServerUnreachable) {
+      iconName = 'cloud-offline';
+      iconColor = colors.primary;
+      iconBoxStyle = [styles.errorIconBox, styles.serverUnreachableIconBox];
+      errorTitle = 'Gagal Terhubung ke Server';
+    } else if (isServerError) {
+      iconName = 'server-outline';
+      iconColor = colors.primary;
+      iconBoxStyle = [styles.errorIconBox, styles.serverErrorIconBox];
+      errorTitle = 'Terjadi Masalah Server';
+    } else if (isAuthError) {
+      iconName = 'lock-closed-outline';
+      iconColor = colors.primary;
+      iconBoxStyle = styles.errorIconBox;
+      errorTitle = 'Sesi Tidak Valid';
+    } else if (isNotFound) {
+      iconName = 'search-outline';
+      iconColor = colors.primary;
+      iconBoxStyle = styles.errorIconBox;
+      errorTitle = 'Menu Tidak Ditemukan';
+    } else {
+      iconName = 'alert-circle-outline';
+      iconColor = colors.primary;
+      iconBoxStyle = styles.errorIconBox;
+      errorTitle = 'Permintaan Tidak Dapat Diproses';
+    }
+
     return (
       <View style={styles.centerContainer}>
-        <View style={styles.errorIconBox}>
-          <Ionicons name="wifi-outline" size={36} color={colors.primary} />
+        <View style={iconBoxStyle}>
+          <Ionicons name={iconName} size={36} color={iconColor} />
         </View>
-        <Text style={styles.errorTitle}>Gagal Memuat Menu</Text>
+        <Text style={styles.errorTitle}>{errorTitle}</Text>
         <Text style={styles.errorMessage}>{menuError}</Text>
         <TouchableOpacity
           style={styles.retryButton}
-          onPress={loadMenus}
+          onPress={() => loadMenus()}
           activeOpacity={0.8}
           accessibilityRole="button"
           accessibilityLabel="Coba lagi memuat menu"
@@ -202,6 +250,8 @@ export const MenuScreen = () => {
             styles.listContent,
             cartTotalCount > 0 && { paddingBottom: 90 },
           ]}
+          refreshing={menuLoading}
+          onRefresh={() => loadMenus()}
           showsVerticalScrollIndicator={false}
         />
       ) : (
@@ -276,6 +326,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
+  },
+  offlineIconBox: {
+    backgroundColor: '#FEF3C7',
+  },
+  serverUnreachableIconBox: {
+    backgroundColor: '#FED7D7',
+  },
+  serverErrorIconBox: {
+    backgroundColor: '#FEE2E2',
   },
   errorTitle: {
     fontSize: 17,

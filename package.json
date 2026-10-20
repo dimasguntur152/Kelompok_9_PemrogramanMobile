@@ -26,9 +26,10 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "api": "node server.js",
-    "test": "node scripts/securityTests.js && node scripts/flowTests.js",
+    "test": "node scripts/securityTests.js && node scripts/flowTests.js && node scripts/pert6Tests.js",
     "test:security": "node scripts/securityTests.js",
-    "test:flow": "node scripts/flowTests.js"
+    "test:flow": "node scripts/flowTests.js",
+    "test:pert6": "node scripts/pert6Tests.js"
   },
   "private": true
 }

@@ -370,6 +370,52 @@ server.post('/orders', verifyToken, (req, res) => {
 });
 
 // =========================================================================
+// PERTEMUAN 6: TESTING & ERROR SIMULATION MIDDLEWARE FOR GET /menus
+// =========================================================================
+// Memungkinkan pengujian kondisi response API (HTTP 4xx & 5xx) secara aman
+// tanpa mengganggu request menu normal (HTTP 200).
+server.get('/menus', (req, res, next) => {
+  const simulateError = req.query.simulate_error;
+  if (!simulateError) {
+    return next();
+  }
+
+  const statusCode = parseInt(simulateError, 10);
+  if (statusCode === 400) {
+    return res.status(400).json({
+      success: false,
+      error: 'Permintaan tidak dapat diproses. Silakan coba lagi.',
+    });
+  }
+  if (statusCode === 401) {
+    return res.status(401).json({
+      success: false,
+      error: 'Sesi Anda tidak valid. Silakan login kembali.',
+    });
+  }
+  if (statusCode === 403) {
+    return res.status(403).json({
+      success: false,
+      error: 'Akses ke data menu ditolak. Silakan coba lagi.',
+    });
+  }
+  if (statusCode === 404) {
+    return res.status(404).json({
+      success: false,
+      error: 'Data menu tidak ditemukan.',
+    });
+  }
+  if (statusCode >= 500 && statusCode < 600) {
+    return res.status(statusCode).json({
+      success: false,
+      error: 'Terjadi masalah pada server. Silakan coba lagi.',
+    });
+  }
+
+  return next();
+});
+
+// =========================================================================
 // PUBLIC REST API ROUTER (Menus & static data)
 // =========================================================================
 // Endpoint GET /menus dan GET /menus/:id tetap publik sesuai Week 4
