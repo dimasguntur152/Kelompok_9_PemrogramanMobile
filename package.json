@@ -8,10 +8,14 @@
     "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.7",
     "expo": "~57.0.25",
+    "expo-camera": "~57.0.6",
     "expo-font": "~57.0.4",
+    "expo-image-picker": "~57.0.20",
     "expo-secure-store": "~57.0.4",
     "expo-status-bar": "~57.0.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.5.0",
+    "mysql2": "^3.24.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
@@ -26,10 +30,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "api": "node server.js",
-    "test": "node scripts/securityTests.js && node scripts/flowTests.js && node scripts/pert6Tests.js",
+    "test": "node scripts/securityTests.js && node scripts/flowTests.js && node scripts/pert6Tests.js && node scripts/cameraTests.js",
     "test:security": "node scripts/securityTests.js",
     "test:flow": "node scripts/flowTests.js",
-    "test:pert6": "node scripts/pert6Tests.js"
+    "test:pert6": "node scripts/pert6Tests.js",
+    "test:camera": "node scripts/cameraTests.js"
   },
   "private": true
 }

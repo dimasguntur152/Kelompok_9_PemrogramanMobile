@@ -7,6 +7,7 @@ import {
   authenticateUser,
   registerUser,
 } from '../services/authService';
+import { fetchProfilePhoto } from '../services/profilePhotoService';
 
 const AppContext = createContext();
 
@@ -15,6 +16,7 @@ export const AppProvider = ({ children }) => {
   // authState: 'CHECKING' | 'AUTHENTICATED' | 'UNAUTHENTICATED'
   const [authState, setAuthState] = useState('CHECKING');
   const [currentUser, setCurrentUser] = useState(null);
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const [sessionClearedMessage, setSessionClearedMessage] = useState(null);
 
   // Navigation State
@@ -44,6 +46,20 @@ export const AppProvider = ({ children }) => {
   const [orders, setOrders] = useState(INITIAL_ORDERS);
   const [activeOrderId, setActiveOrderId] = useState('TDJ-001');
 
+  // Memuat foto profil aktif dari endpoint MySQL (GET /profile/photo)
+  const loadProfilePhoto = async () => {
+    try {
+      const res = await fetchProfilePhoto();
+      if (res && res.success && res.uri) {
+        setProfilePhoto(res.uri);
+      } else {
+        setProfilePhoto(null);
+      }
+    } catch {
+      setProfilePhoto(null);
+    }
+  };
+
   // Verify and restore session from Secure Storage on app start/reload
   useEffect(() => {
     let isMounted = true;
@@ -55,6 +71,7 @@ export const AppProvider = ({ children }) => {
         if (session && session.user && session.token) {
           setAuthState('AUTHENTICATED');
           setCurrentUser(session.user);
+          loadProfilePhoto();
           setCurrentScreen('beranda');
           setActiveTab('beranda');
           setScreenStack(['beranda']);
@@ -212,6 +229,7 @@ export const AppProvider = ({ children }) => {
     if (result.success) {
       setAuthState('AUTHENTICATED');
       setCurrentUser(result.session.user);
+      loadProfilePhoto();
       setSessionClearedMessage(null);
       setCurrentScreen('beranda');
       setActiveTab('beranda');
@@ -229,6 +247,7 @@ export const AppProvider = ({ children }) => {
     await clearActiveSession();
     setAuthState('UNAUTHENTICATED');
     setCurrentUser(null);
+    setProfilePhoto(null);
     setSessionClearedMessage(
       'SESSION CLEARED: Sesi Anda telah dihapus secara aman dari Secure Storage.'
     );
@@ -457,6 +476,9 @@ export const AppProvider = ({ children }) => {
         // Auth & Security state & methods
         authState,
         currentUser,
+        profilePhoto,
+        setProfilePhoto,
+        loadProfilePhoto,
         sessionClearedMessage,
         dismissSessionClearedMessage,
         login,

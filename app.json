@@ -22,7 +22,19 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Izinkan Kedai Tong Djajakarta mengakses kamera untuk mengambil foto profil."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Izinkan Kedai Tong Djajakarta mengakses kamera untuk mengambil foto profil."
+        }
+      ]
     ]
   }
 }

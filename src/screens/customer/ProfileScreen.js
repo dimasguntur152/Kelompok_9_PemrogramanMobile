@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,19 +6,93 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
 import { KEDAI_INFO } from '../../data/mockData';
+import { CameraModal } from '../../components/CameraModal';
+import { uploadProfilePhoto } from '../../services/profilePhotoService';
 
 export const ProfileScreen = () => {
-  const { currentUser, logout } = useApp();
+  const { currentUser, logout, profilePhoto, setProfilePhoto, loadProfilePhoto } = useApp();
   const [activeModal, setActiveModal] = useState(null); // 'account' | 'help' | 'about' | 'logout' | null
+  const [cameraModalVisible, setCameraModalVisible] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadStatusMessage, setUploadStatusMessage] = useState(null);
+  const [cameraError, setCameraError] = useState(null);
+
+  // Ambil foto profil aktif dari database MySQL saat halaman Profil dibuka
+  useEffect(() => {
+    if (loadProfilePhoto) {
+      loadProfilePhoto();
+    }
+  }, []);
 
   const handleConfirmLogout = async () => {
     setActiveModal(null);
     await logout();
+  };
+
+  // Buka kamera saat tombol "Buka Kamera..." atau avatar ditekan
+  const handleOpenCam = () => {
+    setCameraError(null);
+    setUploadStatusMessage(null);
+    setCameraModalVisible(true);
+  };
+
+  // Alur setelah user mengambil foto di kamera dan memilih "Gunakan Foto"
+  const handlePhotoCaptured = async (capturedPhotoSource) => {
+    setIsUploading(true);
+    setUploadStatusMessage(null);
+    setCameraError(null);
+
+    try {
+      // Kirim foto ke endpoint POST /profile/photo (multipart/form-data, Bearer Token)
+      const result = await uploadProfilePhoto(capturedPhotoSource);
+
+      if (result.success) {
+        // 1. Tampilkan feedback berhasil
+        setUploadStatusMessage({
+          title: 'Foto Profil Berhasil Disimpan',
+          message: 'Foto profil berhasil diperbarui. Foto profil kamu berhasil diperbarui.',
+        });
+        // 2. Tutup kamera
+        setCameraModalVisible(false);
+        // 3. Refresh / panggil fetchProfilePhoto() dari server MySQL
+        if (loadProfilePhoto) {
+          await loadProfilePhoto();
+        }
+        // Bersihkan status pesan setelah 4 detik
+        setTimeout(() => {
+          setUploadStatusMessage(null);
+        }, 4000);
+      } else {
+        setCameraModalVisible(false);
+        setUploadStatusMessage(null);
+        setCameraError({
+          title: result.title || 'Gagal Menyimpan Foto',
+          message: result.message || 'Gagal menyimpan foto profil',
+        });
+      }
+    } catch (err) {
+      setCameraModalVisible(false);
+      setUploadStatusMessage(null);
+      setCameraError({
+        title: 'Foto Berhasil Diambil',
+        message: 'Foto belum dapat disimpan ke server. Pastikan backend API sedang berjalan lalu coba lagi.',
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleResetPhoto = () => {
+    setProfilePhoto(null);
+    setCameraError(null);
+    setUploadStatusMessage(null);
   };
 
   return (
@@ -29,9 +103,32 @@ export const ProfileScreen = () => {
     >
       {/* User Avatar & Info Card */}
       <View style={styles.profileHeaderCard}>
-        <View style={styles.avatarWrapper}>
-          <Ionicons name="person" size={36} color={colors.primary} />
-        </View>
+        <TouchableOpacity
+          style={styles.avatarContainer}
+          onPress={handleOpenCam}
+          activeOpacity={0.85}
+          disabled={isUploading}
+          accessibilityRole="button"
+          accessibilityLabel={
+            profilePhoto ? 'Ubah foto profil' : 'Ambil foto profil'
+          }
+        >
+          <View style={styles.avatarWrapper}>
+            {profilePhoto ? (
+              <Image
+                source={{ uri: profilePhoto }}
+                style={styles.avatarImage}
+                resizeMode="cover"
+                accessibilityLabel="Foto Profil Pengguna"
+              />
+            ) : (
+              <Ionicons name="person" size={36} color={colors.primary} />
+            )}
+          </View>
+          <View style={styles.cameraBadge}>
+            <Ionicons name="camera" size={13} color={colors.textInverse} />
+          </View>
+        </TouchableOpacity>
 
         <Text style={styles.userName}>
           {currentUser?.name || 'Civitas UMM'}
@@ -45,7 +142,96 @@ export const ProfileScreen = () => {
             {currentUser?.role || 'Civitas Akademika • Kampus 3 UMM'}
           </Text>
         </View>
+
+        {/* Upload Success Feedback Box */}
+        {uploadStatusMessage ? (
+          <View style={styles.uploadSuccessBox}>
+            <Ionicons
+              name="checkmark-circle"
+              size={20}
+              color="#16A34A"
+              style={{ marginRight: 8 }}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.uploadSuccessTitle}>
+                {uploadStatusMessage.title || 'Foto Profil Berhasil Disimpan'}
+              </Text>
+              <Text style={styles.uploadSuccessText}>
+                {uploadStatusMessage.message || 'Foto profil kamu berhasil diperbarui.'}
+              </Text>
+            </View>
+          </View>
+        ) : null}
+
+        {/* Camera Error Message Box */}
+        {cameraError ? (
+          <View style={styles.cameraErrorBox}>
+            <View style={styles.cameraErrorHeader}>
+              <Ionicons name="alert-circle" size={18} color="#DC2626" />
+              <Text style={styles.cameraErrorTitle}>
+                {cameraError.title || 'Kendala Foto Profil'}
+              </Text>
+            </View>
+            <Text style={styles.cameraErrorText}>
+              {cameraError.message || cameraError}
+            </Text>
+            <TouchableOpacity
+              style={styles.cameraRetryBtn}
+              onPress={handleOpenCam}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel="Coba lagi mengambil foto profil"
+            >
+              <Ionicons
+                name="refresh"
+                size={14}
+                color={colors.textInverse}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={styles.cameraRetryBtnText}>Coba Lagi</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
+        {/* Camera Action Button: Buka Kamera (Ubah Foto Profil / Ambil Foto Profil) */}
+        {isUploading ? (
+          <View style={[styles.cameraButton, styles.uploadingButton]}>
+            <ActivityIndicator
+              size="small"
+              color={colors.textInverse}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.cameraButtonText}>Menyimpan foto...</Text>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={handleOpenCam}
+            disabled={isUploading}
+            activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel={profilePhoto ? 'Buka Kamera (Ubah Foto Profil)' : 'Buka Kamera (Ambil Foto Profil)'}
+          >
+            <Ionicons
+              name="camera"
+              size={18}
+              color={colors.textInverse}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.cameraButtonText}>
+              {profilePhoto ? 'Buka Kamera • Ubah Foto Profil' : 'Buka Kamera • Ambil Foto Profil'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
+
+      {/* Modal Akses Kamera (Direct Web/Mobile Camera Viewfinder via expo-camera CameraView) */}
+      <CameraModal
+        visible={cameraModalVisible}
+        onClose={() => setCameraModalVisible(false)}
+        onPhotoCaptured={handlePhotoCaptured}
+        isUploading={isUploading}
+      />
 
       {/* Keamanan & Sesi Card (Pertemuan 3 Requirement) */}
       <View style={styles.securityCard}>
@@ -341,16 +527,150 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     elevation: 1,
   },
+  avatarContainer: {
+    position: 'relative',
+    marginBottom: 12,
+  },
   avatarWrapper: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 76,
+    height: 76,
+    borderRadius: 38,
     backgroundColor: colors.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
     borderWidth: 2,
     borderColor: '#FED7D7',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 38,
+  },
+  cameraBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: colors.surface,
+    elevation: 2,
+  },
+  cameraButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 14,
+    minWidth: 130,
+  },
+  cameraButtonText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.textInverse,
+  },
+  photoActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 14,
+    width: '100%',
+    maxWidth: 240,
+    justifyContent: 'center',
+  },
+  retakeButton: {
+    marginTop: 0,
+    flex: 1,
+  },
+  resetPhotoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 10,
+  },
+  resetPhotoButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.primaryLight,
+  },
+  cameraErrorBox: {
+    width: '100%',
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 14,
+    alignItems: 'center',
+  },
+  cameraErrorHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  cameraErrorTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#DC2626',
+    marginLeft: 6,
+  },
+  cameraErrorText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 17,
+    marginBottom: 8,
+  },
+  uploadSuccessBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0FDF4',
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginTop: 12,
+  },
+  uploadSuccessTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#15803D',
+    marginBottom: 2,
+  },
+  uploadSuccessText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#166534',
+  },
+  uploadingButton: {
+    opacity: 0.85,
+  },
+  cameraRetryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primaryLight,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  cameraRetryBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.textInverse,
   },
   userName: {
     fontSize: 17,

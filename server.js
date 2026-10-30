@@ -17,6 +17,8 @@ const fs = require('fs');
 const jsonServer = require('json-server');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const dbPool = require('./src/config/db');
 
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || 'kedai_tong_djajakarta_super_secret_jwt_key_2026_umm';
@@ -75,6 +77,7 @@ function verifyToken(req, res, next) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
       success: false,
+      message: 'Token tidak valid atau sesi telah berakhir',
       error: 'Akses ditolak: Token autentikasi diperlukan (Authorization: Bearer <token>).',
     });
   }
@@ -84,6 +87,7 @@ function verifyToken(req, res, next) {
   if (!token) {
     return res.status(401).json({
       success: false,
+      message: 'Token tidak valid atau sesi telah berakhir',
       error: 'Akses ditolak: Token kosong.',
     });
   }
@@ -92,6 +96,7 @@ function verifyToken(req, res, next) {
   if (revokedTokens.has(token)) {
     return res.status(401).json({
       success: false,
+      message: 'Token tidak valid atau sesi telah berakhir',
       error: 'Akses ditolak: Token telah dicabut (revoked). Silakan login kembali.',
     });
   }
@@ -101,11 +106,13 @@ function verifyToken(req, res, next) {
       if (err.name === 'TokenExpiredError') {
         return res.status(401).json({
           success: false,
+          message: 'Token tidak valid atau sesi telah berakhir',
           error: 'Akses ditolak: Token telah kedaluwarsa (expired). Silakan login kembali.',
         });
       }
       return res.status(401).json({
         success: false,
+        message: 'Token tidak valid atau sesi telah berakhir',
         error: 'Akses ditolak: Token tidak valid.',
       });
     }
@@ -299,6 +306,173 @@ server.get('/profile', verifyToken, handleGetProfile);
 server.get('/auth/profile', verifyToken, handleGetProfile);
 server.get('/auth/me', verifyToken, handleGetProfile);
 
+// =========================================================================
+// PROFILE PHOTO ENDPOINTS (MySQL LongBlob Persistence)
+// =========================================================================
+
+// Konfigurasi Multer untuk menangani multipart/form-data field "photo"
+const photoUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // Maksimal 5 MB
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (allowedMimeTypes.includes(file.mimetype?.toLowerCase())) {
+      cb(null, true);
+    } else {
+      const err = new Error('Format foto tidak didukung');
+      err.code = 'INVALID_FORMAT';
+      cb(err, false);
+    }
+  },
+});
+
+/**
+ * Middleware untuk menangani validasi file upload foto profil
+ */
+function handlePhotoUpload(req, res, next) {
+  photoUpload.single('photo')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({
+          success: false,
+          message: 'Ukuran foto terlalu besar. Maksimal 5 MB.',
+        });
+      }
+      if (err.code === 'INVALID_FORMAT' || err.message === 'Format foto tidak didukung') {
+        return res.status(400).json({
+          success: false,
+          message: 'Format foto tidak didukung',
+        });
+      }
+      if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+        return res.status(400).json({
+          success: false,
+          message: 'Foto belum dipilih',
+        });
+      }
+      return res.status(400).json({
+        success: false,
+        message: err.message || 'Gagal memproses file foto',
+      });
+    }
+
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({
+        success: false,
+        message: 'Foto belum dipilih',
+      });
+    }
+
+    if (req.file.buffer.length > 5 * 1024 * 1024) {
+      return res.status(400).json({
+        success: false,
+        message: 'Ukuran foto terlalu besar. Maksimal 5 MB.',
+      });
+    }
+
+    next();
+  });
+}
+
+/**
+ * POST /profile/photo
+ * Menyimpan atau memperbarui foto profil pengguna di MySQL (tabel profile_photos)
+ * user_id diambil secara terisolasi dari claim JWT (req.user.sub)
+ */
+const handleSaveProfilePhoto = async (req, res) => {
+  try {
+    const userId = req.user.sub;
+    const { buffer, mimetype } = req.file;
+
+    const cleanMimeType = mimetype?.toLowerCase() === 'image/png' ? 'image/png' : 'image/jpeg';
+
+    let dbUserId = Number(userId);
+    if (isNaN(dbUserId)) {
+      dbUserId = 1;
+    } else if (dbUserId > 2147483647 || dbUserId < -2147483648) {
+      dbUserId = Math.abs(dbUserId % 2147483647) || 1;
+    }
+
+    // Cek apakah user sudah mempunyai record pada profile_photos
+    const [existingRows] = await dbPool.query(
+      'SELECT id FROM profile_photos WHERE user_id = ? LIMIT 1',
+      [dbUserId]
+    );
+
+    if (existingRows && existingRows.length > 0) {
+      // Jika sudah ada: UPDATE record tersebut
+      await dbPool.query(
+        'UPDATE profile_photos SET image_data = ?, mime_type = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?',
+        [buffer, cleanMimeType, dbUserId]
+      );
+    } else {
+      // Jika belum ada: INSERT
+      await dbPool.query(
+        'INSERT INTO profile_photos (user_id, image_data, mime_type) VALUES (?, ?, ?)',
+        [dbUserId, buffer, cleanMimeType]
+      );
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Foto profil berhasil disimpan',
+    });
+  } catch (error) {
+    console.error('[MySQL Error] Gagal menyimpan foto profil:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Gagal menyimpan foto profil',
+    });
+  }
+};
+
+/**
+ * GET /profile/photo
+ * Mengambil foto profil aktif pengguna dari database MySQL
+ * Mengembalikan binary stream dengan header Content-Type yang sesuai
+ */
+const handleGetProfilePhoto = async (req, res) => {
+  try {
+    const userId = req.user.sub;
+
+    let dbUserId = Number(userId);
+    if (isNaN(dbUserId)) {
+      dbUserId = 1;
+    } else if (dbUserId > 2147483647 || dbUserId < -2147483648) {
+      dbUserId = Math.abs(dbUserId % 2147483647) || 1;
+    }
+
+    const [rows] = await dbPool.query(
+      'SELECT image_data, mime_type FROM profile_photos WHERE user_id = ? LIMIT 1',
+      [dbUserId]
+    );
+
+    if (!rows || rows.length === 0 || !rows[0].image_data) {
+      return res.status(404).json({
+        success: false,
+        message: 'Foto profil belum tersedia',
+      });
+    }
+
+    const photo = rows[0];
+    res.setHeader('Content-Type', photo.mime_type || 'image/jpeg');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    return res.status(200).send(photo.image_data);
+  } catch (error) {
+    console.error('[MySQL Error] Gagal mengambil foto profil:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Gagal mengambil foto profil',
+    });
+  }
+};
+
+server.post('/profile/photo', verifyToken, handlePhotoUpload, handleSaveProfilePhoto);
+server.get('/profile/photo', verifyToken, handleGetProfilePhoto);
+
+
 /**
  * POST /logout (dan /auth/logout)
  * Mencabut token di server (Token Revocation / Blacklist)
@@ -429,6 +603,8 @@ if (require.main === module) {
     console.log(`- Register:         POST http://localhost:${PORT}/register (Publik)`);
     console.log(`- Login (JWT):      POST http://localhost:${PORT}/login (Publik)`);
     console.log(`- Profile:          GET  http://localhost:${PORT}/profile (Protected Bearer Token)`);
+    console.log(`- Photo Profile:    GET  http://localhost:${PORT}/profile/photo (Protected Bearer Token)`);
+    console.log(`- Upload Photo:     POST http://localhost:${PORT}/profile/photo (Protected Multipart Form)`);
     console.log(`- Logout:           POST http://localhost:${PORT}/logout (Protected Token Revocation)`);
   });
 }

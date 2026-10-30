@@ -361,6 +361,46 @@
       "role": "Civitas Akademika • Kampus 3 UMM",
       "passwordHash": "$2b$10$4eSOUO/0yY6gqfVggUuf5.TXNrKdvs3vNitC5F2dj6hEyMo3HdDp6",
       "createdAt": "2026-10-13T09:58:48.621Z"
+    },
+    {
+      "id": 1793095274585,
+      "name": "Mahasiswa UMM 1793095274440",
+      "email": "mahasiswa_1793095274440@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$.Bytpz2LnGqiw/Aj6.BNaOje/ZgWKiAFEEFSd/4ONK5iOFpcRv90m",
+      "createdAt": "2026-10-27T10:01:14.585Z"
+    },
+    {
+      "id": 1793366466375,
+      "name": "Mahasiswa UMM 1793366466234",
+      "email": "mahasiswa_1793366466234@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$sYQ8PTDJanX8cL8i2zBwGO9wED2lpcN/CeMZr5rJsWXRD1oJy4RjO",
+      "createdAt": "2026-10-30T13:21:06.375Z"
+    },
+    {
+      "id": 1793367197910,
+      "name": "Mahasiswa UMM 1793367197817",
+      "email": "mahasiswa_1793367197817@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$KVmI98YqR3fsOelCDe7MBe4JZgPj56kxKXCuQNP/pZvmLHsI.RqS.",
+      "createdAt": "2026-10-30T13:33:17.910Z"
+    },
+    {
+      "id": 1793368682871,
+      "name": "Mahasiswa UMM 1793368682775",
+      "email": "mahasiswa_1793368682775@umm.ac.id",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$S.Zeaj073B8ZiwdBzZE//O2lfgkuOEnt0.liFx5jQvYTfOYxPgNSG",
+      "createdAt": "2026-10-30T13:58:02.871Z"
+    },
+    {
+      "id": 1793368849807,
+      "name": "sasti",
+      "email": "sasti@gmail.com",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$MmmeooUsm9wfbuqng3Kpu.PolBuyxm8lBXz1Dwywsd2kDxRYLcrDq",
+      "createdAt": "2026-10-30T14:00:49.807Z"
     }
   ],
   "orders": []
