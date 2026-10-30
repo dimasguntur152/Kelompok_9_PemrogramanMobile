@@ -401,6 +401,14 @@
       "role": "Civitas Akademika • Kampus 3 UMM",
       "passwordHash": "$2b$10$MmmeooUsm9wfbuqng3Kpu.PolBuyxm8lBXz1Dwywsd2kDxRYLcrDq",
       "createdAt": "2026-10-30T14:00:49.807Z"
+    },
+    {
+      "id": 1793376456385,
+      "name": "reza",
+      "email": "reza@gmail.com",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$cS2U6kuqTtoG.kq6ui8WgudgNgNWh1qqIZ/FhieoEI1ogjkNhP8vS",
+      "createdAt": "2026-10-30T16:07:36.385Z"
     }
   ],
   "orders": []

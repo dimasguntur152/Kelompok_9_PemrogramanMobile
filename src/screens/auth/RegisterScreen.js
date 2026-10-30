@@ -12,6 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import CryptoJS from 'crypto-js';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
 import { validateRegister } from '../../utils/validation';
@@ -49,9 +50,12 @@ export const RegisterScreen = () => {
     }
     setErrors({});
 
-    // 2. Register via auth service
+    // 2. Hash password sebelum dikirim ke API pendaftaran
+    const hashedPassword = CryptoJS.SHA256(password).toString();
+
+    // 3. Register via auth service
     setIsLoading(true);
-    const result = await register({ name, email, password });
+    const result = await register({ name, email, password: hashedPassword });
     setIsLoading(false);
 
     if (result.success) {

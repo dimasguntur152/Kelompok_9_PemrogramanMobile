@@ -14,6 +14,7 @@
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const jsonServer = require('json-server');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -24,6 +25,11 @@ const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || 'kedai_tong_djajakarta_super_secret_jwt_key_2026_umm';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 const DB_FILE = path.join(__dirname, 'db.json');
+
+// Akun Demo Kedai Tong Djajakarta (Mendukung hash SHA-256 dari Frontend & Plaintext)
+const DEMO_EMAIL = 'civitas@umm.ac.id';
+const DEMO_PASSWORD_RAW = 'KedaiTong123';
+const DEMO_PASSWORD_HASH = crypto.createHash('sha256').update(DEMO_PASSWORD_RAW).digest('hex');
 
 const server = jsonServer.create();
 const router = jsonServer.router(DB_FILE);
@@ -197,6 +203,7 @@ const handleRegister = async (req, res) => {
 
 server.post('/register', handleRegister);
 server.post('/auth/register', handleRegister);
+server.post('/api/register', handleRegister);
 
 /**
  * POST /login (dan /auth/login)
@@ -230,8 +237,19 @@ const handleLogin = async (req, res) => {
       });
     }
 
-    // Compare with bcrypt
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    // Autentikasi kredensial pengguna:
+    // 1. Akun demo "civitas@umm.ac.id" & "KedaiTong123": cocokkan hash SHA-256 dari frontend atau teks aslinya
+    let isMatch = false;
+    if (user.email.toLowerCase() === DEMO_EMAIL) {
+      if (password === DEMO_PASSWORD_HASH || password === DEMO_PASSWORD_RAW) {
+        isMatch = true;
+      }
+    }
+
+    // 2. Jika bukan demo / belum cocok, cocokkan dengan bcrypt hash di database
+    if (!isMatch && user.passwordHash) {
+      isMatch = await bcrypt.compare(password, user.passwordHash);
+    }
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -266,6 +284,7 @@ const handleLogin = async (req, res) => {
 
 server.post('/login', handleLogin);
 server.post('/auth/login', handleLogin);
+server.post('/api/login', handleLogin);
 
 // =========================================================================
 // PROTECTED ENDPOINTS (Profile, Logout, Orders)

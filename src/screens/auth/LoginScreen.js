@@ -12,6 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import CryptoJS from 'crypto-js';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
 import { validateLogin } from '../../utils/validation';
@@ -52,9 +53,12 @@ export const LoginScreen = () => {
     }
     setErrors({});
 
-    // 2. Authenticate
+    // 2. Hash password sebelum dikirim ke API (mencegah plaintext terlihat di tab Network)
+    const hashedPassword = CryptoJS.SHA256(password).toString();
+
+    // 3. Authenticate
     setIsLoading(true);
-    const result = await login(identifier, password);
+    const result = await login(identifier, hashedPassword);
     setIsLoading(false);
 
     if (!result.success) {
