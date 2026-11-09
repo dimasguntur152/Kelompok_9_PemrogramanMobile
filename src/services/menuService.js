@@ -66,16 +66,19 @@ export const API_BASE_URL = getBaseUrl();
  * @returns {MenuItem} - Item yang sudah dimapping ke model aplikasi
  */
 const mapToMenuItem = (raw) => {
+  const parsedPrice = Number(String(raw.price ?? 0).replace(/[^\d.-]/g, ''));
+  const status = String(raw.status ?? 'active').toLowerCase();
+
   return {
     id: String(raw.id),          // Konversi ke string agar kompatibel dengan cart state lama
     name: raw.name ?? '',
     description: raw.description ?? '',
-    price: typeof raw.price === 'number' ? raw.price : 0,
+    price: Number.isFinite(parsedPrice) ? parsedPrice : 0,
     image: raw.image ?? null,
     category: raw.category ?? 'Lain-lain',
     label: raw.label ?? null,
-    status: raw.status ?? 'active',
-    available: raw.status !== 'habis',  // Derived: true jika bukan 'habis'
+    status,
+    available: status !== 'habis',
   };
 };
 

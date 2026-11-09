@@ -12,6 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import CryptoJS from 'crypto-js';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
@@ -28,18 +29,12 @@ export const LoginScreen = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
   const [errors, setErrors] = useState({});
   const [authError, setAuthError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   // Quick fill helper for demo presentation
-  const handleQuickFill = () => {
-    setIdentifier('civitas@umm.ac.id');
-    setPassword('KedaiTong123');
-    setErrors({});
-    setAuthError('');
-    if (sessionClearedMessage) dismissSessionClearedMessage();
-  };
 
   const handleLogin = async () => {
     setAuthError('');
@@ -71,12 +66,18 @@ export const LoginScreen = () => {
       style={styles.keyboardAvoid}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+      <LinearGradient
+        colors={[colors.primaryDark, colors.primary, '#B34A3F']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.background}
       >
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
         {/* Brand Header */}
         <View style={styles.brandHeader}>
           <Image
@@ -86,13 +87,6 @@ export const LoginScreen = () => {
             accessibilityLabel="Logo Kedai Tong Djajakarta"
           />
           <Text style={styles.brandTitle}>Kedai Tong Djajakarta</Text>
-          <Text style={styles.brandCampus}>
-            Kampus 3 UMM • GKB 2 Basement
-          </Text>
-          <View style={styles.badgeWrapper}>
-            <View style={styles.badgeDot} />
-            <Text style={styles.badgeText}>Portal Autentikasi Pengguna</Text>
-          </View>
         </View>
 
         {/* SESSION CLEARED Banner (Demo Requirement) */}
@@ -148,6 +142,7 @@ export const LoginScreen = () => {
               style={[
                 styles.inputWrapper,
                 errors.identifier && styles.inputWrapperError,
+                focusedField === 'identifier' && styles.inputWrapperFocused,
               ]}
             >
               <Ionicons
@@ -173,6 +168,14 @@ export const LoginScreen = () => {
                 keyboardType="email-address"
                 returnKeyType="next"
                 accessibilityLabel="Input Email atau Nama Pengguna"
+                onFocus={() => setFocusedField('identifier')}
+                onBlur={() => setFocusedField(null)}
+              />
+              <Ionicons
+                name="at-outline"
+                size={18}
+                color={colors.textMuted}
+                style={styles.inputRightIcon}
               />
             </View>
             {errors.identifier ? (
@@ -189,6 +192,7 @@ export const LoginScreen = () => {
               style={[
                 styles.inputWrapper,
                 errors.password && styles.inputWrapperError,
+                focusedField === 'password' && styles.inputWrapperFocused,
               ]}
             >
               <Ionicons
@@ -215,6 +219,8 @@ export const LoginScreen = () => {
                 returnKeyType="done"
                 onSubmitEditing={handleLogin}
                 accessibilityLabel="Input Password"
+                              onFocus={() => setFocusedField('password')}
+                              onBlur={() => setFocusedField(null)}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
@@ -275,37 +281,9 @@ export const LoginScreen = () => {
           </View>
         </View>
 
-        {/* Demo Fast Testing Card */}
-        <View style={styles.demoCard}>
-          <View style={styles.demoHeader}>
-            <Ionicons name="key-outline" size={16} color={colors.accentDark} />
-            <Text style={styles.demoTitle}>Akun Uji Coba Demo</Text>
-          </View>
-          <Text style={styles.demoDesc}>
-            Email: <Text style={styles.demoVal}>civitas@umm.ac.id</Text>
-            {'\n'}Password: <Text style={styles.demoVal}>••••••••••••</Text> (Tersamar demi keamanan)
-          </Text>
-          <TouchableOpacity
-            style={styles.quickFillButton}
-            onPress={handleQuickFill}
-            activeOpacity={0.7}
-            accessibilityRole="button"
-            accessibilityLabel="Gunakan akun demo cepat"
-          >
-            <Ionicons
-              name="flash-outline"
-              size={14}
-              color={colors.primary}
-              style={{ marginRight: 6 }}
-            />
-            <Text style={styles.quickFillButtonText}>Isi Akun Demo Cepat</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.footerNote}>
-          Kedai Tong Djajakarta • Week 5 Token-Based Secure Authentication
-        </Text>
-      </ScrollView>
+        <Text style={styles.footerNote}>Kedai Tong Djajakarta</Text>
+        </ScrollView>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 };
@@ -313,16 +291,19 @@ export const LoginScreen = () => {
 const styles = StyleSheet.create({
   keyboardAvoid: {
     flex: 1,
-    backgroundColor: colors.background,
+  },
+  background: {
+    flex: 1,
   },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   contentContainer: {
     paddingHorizontal: 20,
-    paddingTop: 36,
+    paddingTop: 42,
     paddingBottom: 40,
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   brandHeader: {
     alignItems: 'center',
@@ -337,37 +318,8 @@ const styles = StyleSheet.create({
   brandTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: colors.primary,
-    letterSpacing: -0.3,
-  },
-  brandCampus: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    marginTop: 4,
-    fontWeight: '500',
-  },
-  badgeWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primarySoft,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#FED7D7',
-    marginTop: 10,
-  },
-  badgeDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.primary,
-    marginRight: 6,
-  },
-  badgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.primary,
+    color: colors.textInverse,
+    letterSpacing: 0,
   },
   sessionClearedCard: {
     backgroundColor: '#F0FDF4',
@@ -413,15 +365,15 @@ const styles = StyleSheet.create({
   },
   formCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 22,
+    borderRadius: 20,
+    padding: 20,
     borderWidth: 1,
     borderColor: colors.borderLight,
     shadowColor: colors.shadowColor,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    elevation: 5,
     marginBottom: 18,
   },
   formTitle: {
@@ -454,13 +406,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF9F6',
     borderWidth: 1.5,
     borderColor: colors.border,
-    borderRadius: 10,
+    borderRadius: 14,
     paddingHorizontal: 12,
     height: 48,
   },
   inputWrapperError: {
     borderColor: colors.primaryLight,
     backgroundColor: '#FEF2F2',
+  },
+  inputWrapperFocused: {
+    borderColor: colors.primary,
+    backgroundColor: '#FFFFFF',
   },
   inputIcon: {
     marginRight: 10,
@@ -474,6 +430,9 @@ const styles = StyleSheet.create({
   eyeButton: {
     padding: 6,
   },
+  inputRightIcon: {
+    marginLeft: 8,
+  },
   fieldErrorText: {
     fontSize: 12,
     color: colors.primaryLight,
@@ -485,14 +444,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 48,
-    borderRadius: 12,
+    height: 52,
+    borderRadius: 15,
     marginTop: 8,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
   },
   submitButtonDisabled: {
     opacity: 0.7,
@@ -517,53 +476,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.primary,
   },
-  demoCard: {
-    backgroundColor: '#FFF7ED',
-    borderWidth: 1,
-    borderColor: '#FED7AA',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 20,
-  },
-  demoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  demoTitle: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.accentDark,
-    marginLeft: 6,
-  },
-  demoDesc: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    lineHeight: 18,
-    marginBottom: 10,
-  },
-  demoVal: {
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  quickFillButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: colors.primary,
-    paddingVertical: 7,
-    borderRadius: 8,
-  },
-  quickFillButtonText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.primary,
-  },
   footerNote: {
     textAlign: 'center',
     fontSize: 11,
-    color: colors.textMuted,
+    color: 'rgba(255,255,255,0.75)',
   },
 });

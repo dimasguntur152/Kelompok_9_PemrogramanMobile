@@ -154,6 +154,11 @@ export const ProductListItem = ({
         >
           {formatRupiah(item.price)}
         </Text>
+        {item.description ? (
+          <Text style={styles.descriptionText} numberOfLines={2}>
+            {item.description}
+          </Text>
+        ) : null}
       </View>
 
       {/* Quantity Control: [-] count [+] */}
@@ -214,30 +219,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
     backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
+    marginHorizontal: 16,
+    marginBottom: 10,
+    elevation: 2,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.07,
+    shadowRadius: 8,
   },
   containerDisabled: {
-    backgroundColor: '#FAFAF9',
-    opacity: 0.75,
+    opacity: 0.5,
   },
   // ---- Gambar ----
   imageWrapper: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
+    width: 72,
+    height: 72,
+    borderRadius: 14,
     overflow: 'hidden',
     marginRight: 12,
     flexShrink: 0,
     backgroundColor: '#292524',
   },
   itemImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
+    width: 72,
+    height: 72,
+    borderRadius: 14,
   },
   imageHidden: {
     width: 0,
@@ -245,9 +257,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   imagePlaceholder: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
+    width: 72,
+    height: 72,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -260,7 +272,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.55)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 14,
   },
   imageOverlayText: {
     fontSize: 10,
@@ -302,6 +314,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: colors.primary,
+  },
+  descriptionText: {
+    fontSize: 11,
+    lineHeight: 15,
+    color: colors.textMuted,
+    marginTop: 3,
   },
   // ---- Quantity ----
   qtyContainer: {

@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   orderCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
+    borderRadius: 18,
     padding: 16,
     borderWidth: 1,
     borderColor: colors.borderLight,
@@ -234,8 +234,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: colors.shadowColor,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
+    shadowOpacity: 0.07,
+    shadowRadius: 8,
   },
   cardHeader: {
     flexDirection: 'row',

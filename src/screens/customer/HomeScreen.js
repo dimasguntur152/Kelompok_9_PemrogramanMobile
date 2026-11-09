@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
 import {
@@ -126,12 +127,12 @@ export const HomeScreen = () => {
           scrollEventThrottle={16}
         >
           {banners.map((banner, idx) => (
-            <View
+            <LinearGradient
               key={banner.id}
-              style={[
-                styles.bannerCard,
-                { width: cardWidth, backgroundColor: banner.bgGradient },
-              ]}
+              colors={[banner.bgGradient, colors.primaryDark, '#3B1714']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={[styles.bannerCard, { width: cardWidth }]}
             >
               {/* Background watermark icon */}
               <View style={styles.bannerWatermark}>
@@ -163,7 +164,7 @@ export const HomeScreen = () => {
                   <Ionicons name="arrow-forward" size={14} color={colors.primary} />
                 </TouchableOpacity>
               </View>
-            </View>
+            </LinearGradient>
           ))}
         </ScrollView>
 

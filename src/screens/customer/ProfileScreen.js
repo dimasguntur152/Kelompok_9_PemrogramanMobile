@@ -15,6 +15,7 @@ import { colors } from '../../theme/colors';
 import { KEDAI_INFO } from '../../data/mockData';
 import { CameraModal } from '../../components/CameraModal';
 import { uploadProfilePhoto } from '../../services/profilePhotoService';
+import { pickImageFromGallery } from '../../utils/imagePicker';
 
 export const ProfileScreen = () => {
   const { currentUser, logout, profilePhoto, setProfilePhoto, loadProfilePhoto } = useApp();
@@ -23,6 +24,7 @@ export const ProfileScreen = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatusMessage, setUploadStatusMessage] = useState(null);
   const [cameraError, setCameraError] = useState(null);
+  const [galleryPhotoUri, setGalleryPhotoUri] = useState(null);
 
   // Ambil foto profil aktif dari database MySQL saat halaman Profil dibuka
   useEffect(() => {
@@ -54,6 +56,7 @@ export const ProfileScreen = () => {
       const result = await uploadProfilePhoto(capturedPhotoSource);
 
       if (result.success) {
+        setGalleryPhotoUri(null);
         // 1. Tampilkan feedback berhasil
         setUploadStatusMessage({
           title: 'Foto Profil Berhasil Disimpan',
@@ -91,8 +94,19 @@ export const ProfileScreen = () => {
 
   const handleResetPhoto = () => {
     setProfilePhoto(null);
+    setGalleryPhotoUri(null);
     setCameraError(null);
     setUploadStatusMessage(null);
+  };
+
+  const handlePickGallery = async () => {
+    setCameraError(null);
+    setUploadStatusMessage(null);
+    const uri = await pickImageFromGallery();
+    if (!uri) return;
+
+    setGalleryPhotoUri(uri);
+    await handlePhotoCaptured(uri);
   };
 
   return (
@@ -114,9 +128,9 @@ export const ProfileScreen = () => {
           }
         >
           <View style={styles.avatarWrapper}>
-            {profilePhoto ? (
+            {galleryPhotoUri || profilePhoto ? (
               <Image
-                source={{ uri: profilePhoto }}
+                source={{ uri: galleryPhotoUri || profilePhoto }}
                 style={styles.avatarImage}
                 resizeMode="cover"
                 accessibilityLabel="Foto Profil Pengguna"
@@ -204,24 +218,53 @@ export const ProfileScreen = () => {
             <Text style={styles.cameraButtonText}>Menyimpan foto...</Text>
           </View>
         ) : (
-          <TouchableOpacity
-            style={styles.cameraButton}
-            onPress={handleOpenCam}
-            disabled={isUploading}
-            activeOpacity={0.8}
-            accessibilityRole="button"
-            accessibilityLabel={profilePhoto ? 'Buka Kamera (Ubah Foto Profil)' : 'Buka Kamera (Ambil Foto Profil)'}
-          >
-            <Ionicons
-              name="camera"
-              size={18}
-              color={colors.textInverse}
-              style={{ marginRight: 8 }}
-            />
-            <Text style={styles.cameraButtonText}>
-              {profilePhoto ? 'Buka Kamera • Ubah Foto Profil' : 'Buka Kamera • Ambil Foto Profil'}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.photoActionsColumn}>
+            <TouchableOpacity
+              style={styles.cameraButton}
+              onPress={handleOpenCam}
+              disabled={isUploading}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={profilePhoto ? 'Buka Kamera (Ubah Foto Profil)' : 'Buka Kamera (Ambil Foto Profil)'}
+            >
+              <Ionicons
+                name="camera"
+                size={18}
+                color={colors.textInverse}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={styles.cameraButtonText}>
+                {profilePhoto ? 'Buka Kamera • Ubah Foto Profil' : 'Buka Kamera • Ambil Foto Profil'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.galleryButton}
+              onPress={handlePickGallery}
+              disabled={isUploading}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel="Pilih foto profil dari galeri"
+            >
+              <Ionicons
+                name="images-outline"
+                size={18}
+                color={colors.primary}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={styles.galleryButtonText}>Pilih dari Galeri</Text>
+            </TouchableOpacity>
+            {galleryPhotoUri || profilePhoto ? (
+              <TouchableOpacity
+                style={styles.resetPhotoButton}
+                onPress={handleResetPhoto}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+                accessibilityLabel="Hapus foto profil"
+              >
+                <Text style={styles.resetPhotoButtonText}>Hapus Foto</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
         )}
       </View>
 
@@ -519,13 +562,17 @@ const styles = StyleSheet.create({
   },
   profileHeaderCard: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 18,
     padding: 20,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.borderLight,
     marginBottom: 16,
-    elevation: 1,
+    elevation: 3,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.07,
+    shadowRadius: 10,
   },
   avatarContainer: {
     position: 'relative',
@@ -569,8 +616,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 10,
+    width: '100%',
     marginTop: 14,
     minWidth: 130,
+  },
+  photoActionsColumn: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  galleryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primarySoft,
+    borderWidth: 1,
+    borderColor: '#F3CACA',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    marginTop: 9,
+    width: '100%',
+  },
+  galleryButtonText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.primary,
   },
   cameraButtonText: {
     fontSize: 13,
@@ -698,11 +768,16 @@ const styles = StyleSheet.create({
   },
   securityCard: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: '#DCFCE7',
     padding: 16,
     marginBottom: 16,
+    elevation: 2,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
   },
   securityHeader: {
     flexDirection: 'row',
@@ -756,11 +831,16 @@ const styles = StyleSheet.create({
   },
   menuSection: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.borderLight,
     paddingHorizontal: 16,
     marginBottom: 16,
+    elevation: 2,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
   },
   menuItem: {
     flexDirection: 'row',

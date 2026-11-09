@@ -19,12 +19,16 @@ const jsonServer = require('json-server');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
+const express = require('express');
 const dbPool = require('./src/config/db');
 
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || 'kedai_tong_djajakarta_super_secret_jwt_key_2026_umm';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 const DB_FILE = path.join(__dirname, 'db.json');
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 // Akun Demo Kedai Tong Djajakarta (Mendukung hash SHA-256 dari Frontend & Plaintext)
 const DEMO_EMAIL = 'civitas@umm.ac.id';
@@ -39,6 +43,7 @@ const middlewares = jsonServer.defaults();
 const revokedTokens = new Set();
 
 server.use(middlewares);
+server.use('/uploads', express.static(UPLOADS_DIR));
 server.use(jsonServer.bodyParser);
 
 // =========================================================================
@@ -490,6 +495,96 @@ const handleGetProfilePhoto = async (req, res) => {
 
 server.post('/profile/photo', verifyToken, handlePhotoUpload, handleSaveProfilePhoto);
 server.get('/profile/photo', verifyToken, handleGetProfilePhoto);
+
+// =========================================================================
+// MENU IMAGE UPLOAD (MySQL + JSON-backed menu API)
+// =========================================================================
+
+const menuImageStorage = multer.diskStorage({
+  destination: (req, file, callback) => callback(null, UPLOADS_DIR),
+  filename: (req, file, callback) => {
+    const extensionByMime = {
+      'image/jpeg': '.jpg',
+      'image/png': '.png',
+      'image/webp': '.webp',
+    };
+    const extension = extensionByMime[file.mimetype?.toLowerCase()];
+    callback(null, `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${extension}`);
+  },
+});
+
+const menuImageUpload = multer({
+  storage: menuImageStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, callback) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowedMimeTypes.includes(file.mimetype?.toLowerCase())) {
+      return callback(null, true);
+    }
+    const error = new Error('Format gambar harus JPEG, PNG, atau WebP.');
+    error.code = 'INVALID_IMAGE_FORMAT';
+    return callback(error);
+  },
+});
+
+function handleMenuImageFile(req, res, next) {
+  menuImageUpload.single('foto')(req, res, (error) => {
+    if (!error) {
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: 'Gambar belum dipilih.' });
+      }
+      return next();
+    }
+
+    const status = error.code === 'LIMIT_FILE_SIZE' || error.code === 'INVALID_IMAGE_FORMAT' ? 400 : 500;
+    const message = error.code === 'LIMIT_FILE_SIZE'
+      ? 'Ukuran gambar maksimal 5 MB.'
+      : error.code === 'INVALID_IMAGE_FORMAT'
+        ? error.message
+        : 'Gagal memproses file gambar.';
+    return res.status(status).json({ success: false, message });
+  });
+}
+
+server.post('/api/upload-foto', verifyToken, handleMenuImageFile, async (req, res) => {
+  const menuName = String(req.body?.menuName || '').trim();
+  if (!menuName) {
+    fs.unlink(req.file.path, () => {});
+    return res.status(400).json({ success: false, message: 'Nama menu wajib diisi.' });
+  }
+
+  const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
+  try {
+    const [rows] = await dbPool.query(
+      'SELECT id, name FROM menus WHERE name = ? LIMIT 1',
+      [menuName]
+    );
+    if (!rows.length) {
+      fs.unlink(req.file.path, () => {});
+      return res.status(404).json({ success: false, message: 'Menu tidak ditemukan di database.' });
+    }
+
+    await dbPool.query('UPDATE menus SET image = ? WHERE id = ?', [imageUrl, rows[0].id]);
+
+    // GET /menus currently uses json-server, so keep its existing image field in sync.
+    const jsonMenu = router.db.get('menus').find({ name: rows[0].name });
+    if (jsonMenu.value()) {
+      jsonMenu.assign({ image: imageUrl }).write();
+    }
+
+    return res.status(200).json({
+      success: true,
+      filename: req.file.filename,
+      imageUrl,
+      menuName: rows[0].name,
+    });
+  } catch (error) {
+    fs.unlink(req.file.path, () => {});
+    console.error('[Menu Image Upload] Gagal menyimpan gambar:', error.message);
+    return res.status(500).json({ success: false, message: 'Gagal menyimpan gambar menu.' });
+  }
+});
 
 
 /**

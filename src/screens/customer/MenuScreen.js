@@ -16,7 +16,6 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
-  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../../context/AppContext';
@@ -369,7 +368,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 8,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   subtitleText: {
     fontSize: 13,
@@ -384,9 +383,7 @@ const styles = StyleSheet.create({
   searchWrapper: {
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
+    backgroundColor: colors.background,
   },
   searchBox: {
     flexDirection: 'row',
@@ -411,9 +408,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   categoriesWrapper: {
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    backgroundColor: colors.background,
     paddingVertical: 10,
   },
   categoriesContent: {
