@@ -185,17 +185,17 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   statusBadge: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: '#FAF0E4',
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: '#E5D6C5',
   },
   statusText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#B45309',
+    color: '#5A2E1F',
   },
   valueHighlight: {
     fontSize: 13,

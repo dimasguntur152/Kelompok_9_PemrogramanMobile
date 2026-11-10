@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
+    borderBottomColor: colors.border,
   },
   homeLeft: {
     flexDirection: 'row',
@@ -127,24 +127,24 @@ const styles = StyleSheet.create({
   badgeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
-    paddingHorizontal: 8,
+    backgroundColor: colors.statusSuccessBg,
+    paddingHorizontal: 9,
     paddingVertical: 4,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: '#C8E6C9',
   },
   badgeDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#16A34A',
+    backgroundColor: colors.statusSuccess,
     marginRight: 5,
   },
   badgeText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#15803D',
+    color: colors.statusSuccess,
   },
 
   container: {
@@ -163,12 +163,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundAlt,
+    borderWidth: 1,
+    borderColor: colors.border,
     marginRight: 10,
   },
   titleWrapper: {

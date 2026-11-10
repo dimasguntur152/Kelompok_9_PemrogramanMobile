@@ -1,47 +1,48 @@
 // Theme Colors for Kedai Tong Djajakarta
-// Clean, elegant, fresh, high contrast, warm cream & deep red branding
+// Coffee Cream + Dark Coffee Brown Theme
+// Warm, elegant, minimalist, clean, consistent across all screens
 
 export const colors = {
-  // Brand Reds
-  primary: '#901A1E',       // Deep Brand Red
-  primaryDark: '#751417',   // Darker shade for pressed states
-  primaryLight: '#B91C1C',  // Vibrant primary red
-  primarySoft: '#FDF2F2',   // Very soft red tint for badges/accents
-  primaryBorder: '#FCA5A5',
+  // Brand Coffee Browns
+  primary: '#5A2E1F',        // Dark Coffee Brown (Aksen utama)
+  primaryDark: '#3D1E14',    // Darker Coffee Brown for pressed states
+  primaryLight: '#8B5E3C',   // Coffee Brown (Aksen sekunder)
+  primarySoft: '#EFE3D3',    // Soft coffee cream tint
+  primaryBorder: '#D9C3B0',  // Muted coffee border
 
-  // Accent Orange (Used sparingly as accent only)
-  accent: '#EA580C',        // Warm Orange
-  accentLight: '#FFF7ED',
-  accentDark: '#C2410C',
+  // Accent Coffee
+  accent: '#8B5E3C',         // Coffee Brown (Aksen sekunder)
+  accentLight: '#F8F3EB',    // Soft Cream (Background alternatif)
+  accentDark: '#5A2E1F',     // Dark Coffee Brown
 
   // Backgrounds
-  background: '#FBF9F5',    // Off-white / Warm cream base
-  backgroundAlt: '#F5EFE6', // Soft secondary cream
-  surface: '#FFFFFF',       // Pure white cards / sheets
-  surfaceElevated: '#FFFFFF',
+  background: '#F3E7D6',     // Cream Beige (Background utama)
+  backgroundAlt: '#F8F3EB',  // Soft Cream (Background alternatif)
+  surface: '#FFFDF9',        // Warm White (Card)
+  surfaceElevated: '#FFFDF9',
 
   // Text Colors
-  textPrimary: '#1C1917',   // Deep Charcoal - Maximum readability
-  textSecondary: '#57534E', // Medium Charcoal
-  textMuted: '#78716C',     // Muted warm slate
-  textInverse: '#FFFFFF',   // White text on primary buttons
-  textAccent: '#C2410C',
+  textPrimary: '#38251D',    // Dark Brown (Teks utama)
+  textSecondary: '#8A776B',  // Muted Brown (Teks sekunder)
+  textMuted: '#8A776B',      // Muted Brown
+  textInverse: '#FFFDF9',    // Warm White text on dark buttons
+  textAccent: '#8B5E3C',     // Coffee Brown
 
   // Status & Badges
-  statusSuccess: '#166534',
-  statusSuccessBg: '#DCFCE7',
-  statusWarning: '#B45309',
-  statusWarningBg: '#FEF3C7',
-  statusInfo: '#1E40AF',
-  statusInfoBg: '#DBEAFE',
-  statusMuted: '#57534E',
-  statusMutedBg: '#F5F5F4',
+  statusSuccess: '#2E6930',
+  statusSuccessBg: '#EAF4EB',
+  statusWarning: '#9A5B18',
+  statusWarningBg: '#FAF0E4',
+  statusInfo: '#4A6274',
+  statusInfoBg: '#EBF1F5',
+  statusMuted: '#8A776B',
+  statusMutedBg: '#F8F3EB',
 
   // Borders & Dividers
-  border: '#E7E5E4',        // Clean subtle border
-  borderLight: '#F5F5F4',
-  borderFocus: '#901A1E',
+  border: '#E5D6C5',         // Soft Beige (Border)
+  borderLight: '#EDE2D4',    // Very soft border
+  borderFocus: '#5A2E1F',    // Dark Coffee Brown
 
   // Shadow
-  shadowColor: '#1C1917',
+  shadowColor: '#38251D',
 };

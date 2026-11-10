@@ -60,13 +60,13 @@ export const RegisterScreen = () => {
 
     if (result.success) {
       setSuccessMessage(
-        'Akun berhasil didaftarkan! Data Anda telah diamankan di Secure Storage. Mengalihkan ke halaman Masuk...'
+        'Pendaftaran akun berhasil! Mengalihkan ke halaman masuk...'
       );
       setTimeout(() => {
         navigateTo('login');
       }, 1500);
     } else {
-      setRegisterError(result.error || 'Gagal mendaftar akun. Silakan coba lagi.');
+      setRegisterError(result.error || 'Pendaftaran belum berhasil. Silakan coba beberapa saat lagi.');
     }
   };
 
@@ -144,9 +144,9 @@ export const RegisterScreen = () => {
 
         {/* Form Card */}
         <View style={styles.formCard}>
-          <Text style={styles.formTitle}>Registrasi Tong Family</Text>
+          <Text style={styles.formTitle}>Daftar Akun Baru</Text>
           <Text style={styles.formSubtitle}>
-            Daftarkan akun untuk pemesanan cepat dan kemudahan transaksi
+            Lengkapi data untuk memesan kopi dan makanan favoritmu
           </Text>
 
           {/* Nama Lengkap */}
@@ -162,8 +162,8 @@ export const RegisterScreen = () => {
             >
               <Ionicons
                 name="person-outline"
-                size={20}
-                color={errors.name ? colors.primaryLight : colors.textMuted}
+                size={19}
+                color={errors.name ? colors.accent : colors.textMuted}
                 style={styles.inputIcon}
               />
               <TextInput
@@ -189,7 +189,7 @@ export const RegisterScreen = () => {
           {/* Email */}
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>
-              Email Civitas UMM <Text style={styles.requiredStar}>*</Text>
+              Email <Text style={styles.requiredStar}>*</Text>
             </Text>
             <View
               style={[
@@ -199,13 +199,13 @@ export const RegisterScreen = () => {
             >
               <Ionicons
                 name="mail-outline"
-                size={20}
-                color={errors.email ? colors.primaryLight : colors.textMuted}
+                size={19}
+                color={errors.email ? colors.accent : colors.textMuted}
                 style={styles.inputIcon}
               />
               <TextInput
                 style={styles.textInput}
-                placeholder="contoh: nama@umm.ac.id"
+                placeholder="contoh: nama@email.com"
                 placeholderTextColor={colors.textMuted}
                 value={email}
                 onChangeText={(text) => {
@@ -228,7 +228,7 @@ export const RegisterScreen = () => {
           {/* Password */}
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>
-              Password <Text style={styles.requiredStar}>*</Text>
+              Kata Sandi <Text style={styles.requiredStar}>*</Text>
             </Text>
             <View
               style={[
@@ -238,8 +238,8 @@ export const RegisterScreen = () => {
             >
               <Ionicons
                 name="lock-closed-outline"
-                size={20}
-                color={errors.password ? colors.primaryLight : colors.textMuted}
+                size={19}
+                color={errors.password ? colors.accent : colors.textMuted}
                 style={styles.inputIcon}
               />
               <TextInput
@@ -258,7 +258,7 @@ export const RegisterScreen = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="next"
-                accessibilityLabel="Input Password Baru"
+                accessibilityLabel="Input Kata Sandi Baru"
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
@@ -266,7 +266,7 @@ export const RegisterScreen = () => {
                 activeOpacity={0.7}
                 accessibilityRole="button"
                 accessibilityLabel={
-                  showPassword ? 'Sembunyikan password' : 'Lihat password'
+                  showPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'
                 }
               >
                 <Ionicons
@@ -284,7 +284,7 @@ export const RegisterScreen = () => {
           {/* Confirm Password */}
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>
-              Konfirmasi Password <Text style={styles.requiredStar}>*</Text>
+              Konfirmasi Kata Sandi <Text style={styles.requiredStar}>*</Text>
             </Text>
             <View
               style={[
@@ -294,17 +294,17 @@ export const RegisterScreen = () => {
             >
               <Ionicons
                 name="shield-checkmark-outline"
-                size={20}
+                size={19}
                 color={
                   errors.confirmPassword
-                    ? colors.primaryLight
+                    ? colors.accent
                     : colors.textMuted
                 }
                 style={styles.inputIcon}
               />
               <TextInput
                 style={styles.textInput}
-                placeholder="Ulangi password di atas"
+                placeholder="Masukkan ulang kata sandi"
                 placeholderTextColor={colors.textMuted}
                 value={confirmPassword}
                 onChangeText={(text) => {
@@ -322,7 +322,7 @@ export const RegisterScreen = () => {
                 autoCorrect={false}
                 returnKeyType="done"
                 onSubmitEditing={handleRegister}
-                accessibilityLabel="Konfirmasi Password Baru"
+                accessibilityLabel="Konfirmasi Kata Sandi Baru"
               />
               <TouchableOpacity
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -331,8 +331,8 @@ export const RegisterScreen = () => {
                 accessibilityRole="button"
                 accessibilityLabel={
                   showConfirmPassword
-                    ? 'Sembunyikan konfirmasi password'
-                    : 'Lihat konfirmasi password'
+                    ? 'Sembunyikan konfirmasi kata sandi'
+                    : 'Lihat konfirmasi kata sandi'
                 }
               >
                 <Ionicons
@@ -347,19 +347,6 @@ export const RegisterScreen = () => {
                 {errors.confirmPassword}
               </Text>
             ) : null}
-          </View>
-
-          {/* Security Note */}
-          <View style={styles.securityNoteBox}>
-            <Ionicons
-              name="lock-closed"
-              size={14}
-              color={colors.statusSuccess}
-              style={{ marginRight: 6 }}
-            />
-            <Text style={styles.securityNoteText}>
-              Kredensial akun Anda diamankan menggunakan password hashing bcrypt standar industri di server.
-            </Text>
           </View>
 
           {/* Register Button */}
@@ -378,7 +365,7 @@ export const RegisterScreen = () => {
               <ActivityIndicator color={colors.textInverse} size="small" />
             ) : (
               <>
-                <Text style={styles.submitButtonText}>Daftar Akun</Text>
+                <Text style={styles.submitButtonText}>Daftar Sekarang</Text>
                 <Ionicons
                   name="person-add-outline"
                   size={18}
@@ -391,7 +378,7 @@ export const RegisterScreen = () => {
 
           {/* Switch to Login */}
           <View style={styles.switchAuthRow}>
-            <Text style={styles.switchAuthPrompt}>Sudah punya akun?</Text>
+            <Text style={styles.switchAuthPrompt}>Sudah memiliki akun?</Text>
             <TouchableOpacity
               onPress={() => navigateTo('login')}
               activeOpacity={0.7}
@@ -402,10 +389,6 @@ export const RegisterScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-        <Text style={styles.footerNote}>
-          Kedai Tong Djajakarta • P2MW F&B Kampus 3 UMM
-        </Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -437,7 +420,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -471,9 +454,9 @@ const styles = StyleSheet.create({
   successBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F0FDF4',
+    backgroundColor: colors.statusSuccessBg,
     borderWidth: 1,
-    borderColor: '#BBF7D0',
+    borderColor: '#C8E6C9',
     borderRadius: 12,
     padding: 12,
     marginBottom: 16,
@@ -488,30 +471,30 @@ const styles = StyleSheet.create({
   errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF2F2',
+    backgroundColor: '#FAF0E4',
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: colors.border,
     borderRadius: 12,
     padding: 12,
     marginBottom: 16,
   },
   errorBannerText: {
     fontSize: 13,
-    color: colors.primaryDark,
+    color: colors.primary,
     fontWeight: '600',
     marginLeft: 8,
     flex: 1,
   },
   formCard: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
+    borderRadius: 18,
     padding: 22,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.border,
     shadowColor: colors.shadowColor,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
     elevation: 2,
     marginBottom: 18,
   },
@@ -537,21 +520,21 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   requiredStar: {
-    color: colors.primaryLight,
+    color: colors.accent,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAF9F6',
-    borderWidth: 1.5,
+    backgroundColor: colors.backgroundAlt,
+    borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 12,
     height: 48,
   },
   inputWrapperError: {
-    borderColor: colors.primaryLight,
-    backgroundColor: '#FEF2F2',
+    borderColor: colors.accent,
+    backgroundColor: '#FAF0E4',
   },
   inputIcon: {
     marginRight: 10,
@@ -567,42 +550,25 @@ const styles = StyleSheet.create({
   },
   fieldErrorText: {
     fontSize: 12,
-    color: colors.primaryLight,
+    color: colors.accent,
     marginTop: 4,
     fontWeight: '500',
-  },
-  securityNoteBox: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: '#F8FAFC',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 8,
-    padding: 10,
-    marginTop: 4,
-    marginBottom: 14,
-  },
-  securityNoteText: {
-    fontSize: 11,
-    color: colors.textSecondary,
-    lineHeight: 16,
-    flex: 1,
   },
   submitButton: {
     backgroundColor: colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 48,
+    height: 50,
     borderRadius: 12,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 2,
   },
   submitButtonDisabled: {
-    opacity: 0.7,
+    opacity: 0.65,
   },
   submitButtonText: {
     color: colors.textInverse,
@@ -624,9 +590,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.primary,
   },
-  footerNote: {
-    textAlign: 'center',
-    fontSize: 11,
-    color: colors.textMuted,
-  },
 });
+

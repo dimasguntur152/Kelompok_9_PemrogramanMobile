@@ -67,8 +67,8 @@ export const MenuScreen = () => {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Memuat data...</Text>
-        <Text style={styles.loadingSubText}>Menghubungkan ke server Kedai Tong Djajakarta</Text>
+        <Text style={styles.loadingText}>Memuat menu...</Text>
+        <Text style={styles.loadingSubText}>Menyiapkan pilihan menu untukmu</Text>
       </View>
     );
   }
@@ -101,12 +101,12 @@ export const MenuScreen = () => {
       iconName = 'cloud-offline';
       iconColor = colors.primary;
       iconBoxStyle = [styles.errorIconBox, styles.serverUnreachableIconBox];
-      errorTitle = 'Gagal Terhubung ke Server';
+      errorTitle = 'Layanan Belum Tersedia';
     } else if (isServerError) {
       iconName = 'server-outline';
       iconColor = colors.primary;
       iconBoxStyle = [styles.errorIconBox, styles.serverErrorIconBox];
-      errorTitle = 'Terjadi Masalah Server';
+      errorTitle = 'Layanan Sedang Terkendala';
     } else if (isAuthError) {
       iconName = 'lock-closed-outline';
       iconColor = colors.primary;
@@ -157,7 +157,7 @@ export const MenuScreen = () => {
         </Text>
         {menuData.length > 0 && (
           <Text style={styles.apiNote}>
-            {menuData.length} menu tersedia dari REST API
+            {menuData.length} menu pilihan siap dipesan
           </Text>
         )}
       </View>
@@ -327,13 +327,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   offlineIconBox: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: '#FAF0E4',
   },
   serverUnreachableIconBox: {
-    backgroundColor: '#FED7D7',
+    backgroundColor: colors.primarySoft,
   },
   serverErrorIconBox: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: colors.primarySoft,
   },
   errorTitle: {
     fontSize: 17,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderRadius: 10,
     paddingHorizontal: 12,
     height: 42,
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 20,
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -450,7 +450,9 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#F5F5F4',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -495,7 +497,7 @@ const styles = StyleSheet.create({
   },
   cartSubNote: {
     fontSize: 11,
-    color: '#FED7D7',
+    color: '#E5D6C5',
     marginTop: 2,
   },
   viewCartButton: {

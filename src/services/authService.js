@@ -64,12 +64,12 @@ export const registerUser = async ({ name, email, password }) => {
 
     return {
       success: false,
-      error: data.error || 'Gagal mendaftarkan akun. Silakan periksa kembali input Anda.',
+      error: data.error || 'Pendaftaran akun belum berhasil. Silakan periksa kembali data Anda.',
     };
   } catch (error) {
     return {
       success: false,
-      error: 'Tidak dapat terhubung ke server Kedai Tong Djajakarta. Pastikan backend aktif (npm run api).',
+      error: 'Layanan sedang tidak dapat diakses. Silakan coba kembali beberapa saat lagi.',
     };
   }
 };
@@ -122,12 +122,12 @@ export const authenticateUser = async (identifier, password) => {
 
     return {
       success: false,
-      error: data.error || 'Email atau password salah.',
+      error: data.error || 'Email atau kata sandi tidak sesuai.',
     };
   } catch (error) {
     return {
       success: false,
-      error: 'Gagal terhubung ke server autentikasi (port 4000). Pastikan backend sudah dijalankan.',
+      error: 'Layanan sedang tidak dapat diakses. Silakan coba beberapa saat lagi.',
     };
   }
 };

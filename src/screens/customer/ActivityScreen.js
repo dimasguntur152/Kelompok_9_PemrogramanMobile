@@ -23,44 +23,44 @@ export const ActivityScreen = () => {
     switch (status) {
       case 'Selesai':
         return {
-          bg: '#DCFCE7',
-          text: '#15803D',
-          border: '#BBF7D0',
+          bg: '#E8F5E9',
+          text: '#2E7D32',
+          border: '#C8E6C9',
           icon: 'checkmark-circle',
         };
       case 'Menunggu':
         return {
-          bg: '#FEF3C7',
-          text: '#B45309',
-          border: '#FDE68A',
+          bg: '#FAF0E4',
+          text: '#5A2E1F',
+          border: '#E5D6C5',
           icon: 'time',
         };
       case 'Diproses':
         return {
-          bg: '#DBEAFE',
-          text: '#1D4ED8',
-          border: '#BFDBFE',
+          bg: '#F8F3EB',
+          text: '#8B5E3C',
+          border: '#E5D6C5',
           icon: 'flame',
         };
       case 'Sedang Diantar':
         return {
-          bg: '#FFEDD5',
-          text: '#C2410C',
-          border: '#FED7AA',
+          bg: '#FAF0E4',
+          text: '#8B5E3C',
+          border: '#E5D6C5',
           icon: 'bicycle',
         };
       case 'Siap Diambil':
         return {
-          bg: '#FFEDD5',
-          text: '#C2410C',
-          border: '#FED7AA',
+          bg: '#FAF0E4',
+          text: '#8B5E3C',
+          border: '#E5D6C5',
           icon: 'storefront',
         };
       default:
         return {
-          bg: '#F5F5F4',
-          text: '#57534E',
-          border: '#E7E5E4',
+          bg: '#F8F3EB',
+          text: '#8A776B',
+          border: '#E5D6C5',
           icon: 'information-circle',
         };
     }

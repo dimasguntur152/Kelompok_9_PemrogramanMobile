@@ -28,16 +28,16 @@ export const OrderDetailScreen = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'Menunggu':
-        return { bg: '#FEF3C7', text: '#B45309', border: '#FDE68A' };
+        return { bg: '#FAF0E4', text: '#5A2E1F', border: '#E5D6C5' };
       case 'Diproses':
-        return { bg: '#DBEAFE', text: '#1D4ED8', border: '#BFDBFE' };
+        return { bg: '#F8F3EB', text: '#8B5E3C', border: '#E5D6C5' };
       case 'Sedang Diantar':
       case 'Siap Diambil':
-        return { bg: '#FFEDD5', text: '#C2410C', border: '#FED7AA' };
+        return { bg: '#FAF0E4', text: '#8B5E3C', border: '#E5D6C5' };
       case 'Selesai':
-        return { bg: '#DCFCE7', text: '#15803D', border: '#BBF7D0' };
+        return { bg: '#E8F5E9', text: '#2E7D32', border: '#C8E6C9' };
       default:
-        return { bg: '#F5F5F4', text: '#57534E', border: '#E7E5E4' };
+        return { bg: '#F8F3EB', text: '#8A776B', border: '#E5D6C5' };
     }
   };
 

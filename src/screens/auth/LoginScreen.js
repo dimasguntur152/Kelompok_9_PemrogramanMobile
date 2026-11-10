@@ -12,7 +12,6 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import CryptoJS from 'crypto-js';
 import { useApp } from '../../context/AppContext';
 import { colors } from '../../theme/colors';
@@ -66,12 +65,7 @@ export const LoginScreen = () => {
       style={styles.keyboardAvoid}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <LinearGradient
-        colors={[colors.primaryDark, colors.primary, '#B34A3F']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.background}
-      >
+      <View style={styles.background}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
@@ -87,28 +81,10 @@ export const LoginScreen = () => {
             accessibilityLabel="Logo Kedai Tong Djajakarta"
           />
           <Text style={styles.brandTitle}>Kedai Tong Djajakarta</Text>
+          <Text style={styles.brandSubtitle}>
+            Kopi & kuliner pilihan di Kampus 3 UMM
+          </Text>
         </View>
-
-        {/* SESSION CLEARED Banner (Demo Requirement) */}
-        {sessionClearedMessage ? (
-          <View
-            style={styles.sessionClearedCard}
-            accessibilityRole="alert"
-            accessibilityLabel="Sesi telah dibersihkan"
-          >
-            <View style={styles.sessionClearedHeader}>
-              <Ionicons
-                name="shield-checkmark"
-                size={20}
-                color={colors.statusSuccess}
-              />
-              <Text style={styles.sessionClearedTitle}>SESSION CLEARED</Text>
-            </View>
-            <Text style={styles.sessionClearedText}>
-              {sessionClearedMessage}
-            </Text>
-          </View>
-        ) : null}
 
         {/* Authentication Error Banner */}
         {authError ? (
@@ -119,7 +95,7 @@ export const LoginScreen = () => {
           >
             <Ionicons
               name="alert-circle"
-              size={20}
+              size={18}
               color={colors.primaryLight}
             />
             <Text style={styles.errorBannerText}>{authError}</Text>
@@ -128,9 +104,9 @@ export const LoginScreen = () => {
 
         {/* Login Form Card */}
         <View style={styles.formCard}>
-          <Text style={styles.formTitle}>Masuk Akun</Text>
+          <Text style={styles.formTitle}>Masuk ke Akun</Text>
           <Text style={styles.formSubtitle}>
-            Silakan masuk untuk melanjutkan pemesanan & aktivitas
+            Silakan masukkan akun Anda untuk mulai memesan
           </Text>
 
           {/* Identifier Input */}
@@ -147,13 +123,13 @@ export const LoginScreen = () => {
             >
               <Ionicons
                 name="mail-outline"
-                size={20}
+                size={19}
                 color={errors.identifier ? colors.primaryLight : colors.textMuted}
                 style={styles.inputIcon}
               />
               <TextInput
                 style={styles.textInput}
-                placeholder="contoh: civitas@umm.ac.id"
+                placeholder="contoh: nama@email.com"
                 placeholderTextColor={colors.textMuted}
                 value={identifier}
                 onChangeText={(text) => {
@@ -186,7 +162,7 @@ export const LoginScreen = () => {
           {/* Password Input */}
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>
-              Password <Text style={styles.requiredStar}>*</Text>
+              Kata Sandi <Text style={styles.requiredStar}>*</Text>
             </Text>
             <View
               style={[
@@ -197,13 +173,13 @@ export const LoginScreen = () => {
             >
               <Ionicons
                 name="lock-closed-outline"
-                size={20}
+                size={19}
                 color={errors.password ? colors.primaryLight : colors.textMuted}
                 style={styles.inputIcon}
               />
               <TextInput
                 style={styles.textInput}
-                placeholder="Masukkan password akun"
+                placeholder="Masukkan kata sandi"
                 placeholderTextColor={colors.textMuted}
                 value={password}
                 onChangeText={(text) => {
@@ -218,9 +194,9 @@ export const LoginScreen = () => {
                 autoCorrect={false}
                 returnKeyType="done"
                 onSubmitEditing={handleLogin}
-                accessibilityLabel="Input Password"
-                              onFocus={() => setFocusedField('password')}
-                              onBlur={() => setFocusedField(null)}
+                accessibilityLabel="Input Kata Sandi"
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
@@ -228,7 +204,7 @@ export const LoginScreen = () => {
                 activeOpacity={0.7}
                 accessibilityRole="button"
                 accessibilityLabel={
-                  showPassword ? 'Sembunyikan password' : 'Lihat password'
+                  showPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'
                 }
               >
                 <Ionicons
@@ -281,9 +257,9 @@ export const LoginScreen = () => {
           </View>
         </View>
 
-        <Text style={styles.footerNote}>Kedai Tong Djajakarta</Text>
+        <Text style={styles.footerNote}>Kedai Tong Djajakarta • Kampus 3 UMM</Text>
         </ScrollView>
-      </LinearGradient>
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -294,14 +270,15 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
   },
   contentContainer: {
     paddingHorizontal: 20,
-    paddingTop: 42,
-    paddingBottom: 40,
+    paddingTop: 36,
+    paddingBottom: 36,
     flexGrow: 1,
     justifyContent: 'center',
   },
@@ -318,62 +295,43 @@ const styles = StyleSheet.create({
   brandTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: colors.textInverse,
-    letterSpacing: 0,
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
-  sessionClearedCard: {
-    backgroundColor: '#F0FDF4',
-    borderWidth: 1,
-    borderColor: '#BBF7D0',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 16,
-  },
-  sessionClearedHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  sessionClearedTitle: {
+  brandSubtitle: {
     fontSize: 13,
-    fontWeight: '800',
-    color: colors.statusSuccess,
-    marginLeft: 6,
-    letterSpacing: 0.5,
-  },
-  sessionClearedText: {
-    fontSize: 12,
-    color: '#166534',
-    lineHeight: 18,
+    color: colors.textSecondary,
+    marginTop: 4,
+    fontWeight: '500',
   },
   errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF2F2',
+    backgroundColor: '#FAF0E4',
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: colors.border,
     borderRadius: 12,
     padding: 12,
     marginBottom: 16,
   },
   errorBannerText: {
     fontSize: 13,
-    color: colors.primaryDark,
+    color: colors.primary,
     fontWeight: '600',
     marginLeft: 8,
     flex: 1,
   },
   formCard: {
     backgroundColor: colors.surface,
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 18,
+    padding: 22,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.border,
     shadowColor: colors.shadowColor,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
     marginBottom: 18,
   },
   formTitle: {
@@ -398,25 +356,25 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   requiredStar: {
-    color: colors.primaryLight,
+    color: colors.accent,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAF9F6',
-    borderWidth: 1.5,
+    backgroundColor: colors.backgroundAlt,
+    borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 14,
+    borderRadius: 12,
     paddingHorizontal: 12,
     height: 48,
   },
   inputWrapperError: {
-    borderColor: colors.primaryLight,
-    backgroundColor: '#FEF2F2',
+    borderColor: colors.accent,
+    backgroundColor: '#FAF0E4',
   },
   inputWrapperFocused: {
     borderColor: colors.primary,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   inputIcon: {
     marginRight: 10,
@@ -435,7 +393,7 @@ const styles = StyleSheet.create({
   },
   fieldErrorText: {
     fontSize: 12,
-    color: colors.primaryLight,
+    color: colors.accent,
     marginTop: 5,
     fontWeight: '500',
   },
@@ -444,17 +402,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 52,
-    borderRadius: 15,
+    height: 50,
+    borderRadius: 12,
     marginTop: 8,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 2,
   },
   submitButtonDisabled: {
-    opacity: 0.7,
+    opacity: 0.65,
   },
   submitButtonText: {
     color: colors.textInverse,
@@ -479,6 +437,6 @@ const styles = StyleSheet.create({
   footerNote: {
     textAlign: 'center',
     fontSize: 11,
-    color: 'rgba(255,255,255,0.75)',
+    color: colors.textMuted,
   },
 });

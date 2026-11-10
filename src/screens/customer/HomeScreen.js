@@ -35,7 +35,7 @@ export const HomeScreen = () => {
   const [carouselWidth, setCarouselWidth] = useState(360);
   const carouselScrollRef = useRef(null);
 
-  // 1. Hero Carousel Data (Exact text as requested)
+  // 1. Hero Carousel Data (Coffee Cream & Warm Brown)
   const banners = [
     {
       id: 'banner_1',
@@ -43,8 +43,8 @@ export const HomeScreen = () => {
       title: 'Kopi dan Makanan Favoritmu',
       subtitle: 'Pesan lebih mudah dari Kampus 3 UMM',
       ctaText: 'Pesan Sekarang',
-      bgGradient: '#751417',
-      accentColor: '#FED7AA',
+      bgGradient: '#5A2E1F',
+      accentColor: '#F3E7D6',
       icon: 'cafe',
     },
     {
@@ -53,8 +53,8 @@ export const HomeScreen = () => {
       title: 'Pesan dari Mana Saja',
       subtitle: 'Antar langsung ke lokasi kamu di Kampus 3 UMM',
       ctaText: 'Pesan Sekarang',
-      bgGradient: '#831843',
-      accentColor: '#FDE68A',
+      bgGradient: '#6F3B2A',
+      accentColor: '#F8F3EB',
       icon: 'bicycle',
     },
     {
@@ -63,8 +63,8 @@ export const HomeScreen = () => {
       title: 'Menu Favorit Tong Family',
       subtitle: 'Temukan minuman dan makanan favoritmu',
       ctaText: 'Pesan Sekarang',
-      bgGradient: '#431407',
-      accentColor: '#FECACA',
+      bgGradient: '#432115',
+      accentColor: '#E5D6C5',
       icon: 'sparkles',
     },
   ];
@@ -129,7 +129,7 @@ export const HomeScreen = () => {
           {banners.map((banner, idx) => (
             <LinearGradient
               key={banner.id}
-              colors={[banner.bgGradient, colors.primaryDark, '#3B1714']}
+              colors={[banner.bgGradient, colors.primaryDark, '#2E150D']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={[styles.bannerCard, { width: cardWidth }]}
@@ -302,7 +302,7 @@ export const HomeScreen = () => {
                       <Ionicons
                         name="flame"
                         size={11}
-                        color="#B45309"
+                        color={colors.primaryLight}
                         style={{ marginRight: 3 }}
                       />
                       <Text style={styles.bestSellerBadgeText}>BEST SELLER</Text>
@@ -653,7 +653,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#D6D3D1',
+    backgroundColor: '#D7C7B7',
   },
   dotActive: {
     width: 18,
@@ -768,31 +768,31 @@ const styles = StyleSheet.create({
   bestSellerBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF3C7',
+    backgroundColor: '#FAF0E4',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: '#E5D6C5',
   },
   bestSellerBadgeText: {
     fontSize: 9,
     fontWeight: '800',
-    color: '#B45309',
+    color: '#5A2E1F',
     letterSpacing: 0.2,
   },
   regularBadge: {
-    backgroundColor: '#F5F5F4',
+    backgroundColor: '#F8F3EB',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: '#E7E5E4',
+    borderColor: '#E5D6C5',
   },
   regularBadgeText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#78716C',
+    color: '#8A776B',
   },
   drinkIconBox: {
     width: 30,
@@ -928,7 +928,7 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FED7D7',
+    borderColor: colors.border,
     marginBottom: 12,
   },
   p2mwPillText: {
@@ -1032,7 +1032,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#FED7D7',
+    borderColor: colors.border,
     marginBottom: 14,
   },
   p2mwBadgeText: {

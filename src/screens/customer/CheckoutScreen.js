@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   },
   optionCardSelected: {
     borderColor: colors.primary,
-    backgroundColor: '#FEF9F9',
+    backgroundColor: '#FAF0E4',
   },
   radioRow: {
     flexDirection: 'row',
@@ -396,10 +396,10 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   feeTagFree: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: '#E8F5E9',
   },
   feeTagFreeText: {
-    color: '#15803D',
+    color: '#2E7D32',
   },
   methodDesc: {
     fontSize: 13,
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   textInput: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 10,
@@ -470,12 +470,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   exampleBox: {
-    backgroundColor: '#FAF5EE',
+    backgroundColor: colors.backgroundAlt,
     padding: 8,
     borderRadius: 6,
     marginTop: 6,
     borderLeftWidth: 3,
-    borderLeftColor: colors.accent,
+    borderLeftColor: colors.primaryLight,
   },
   exampleTitle: {
     fontSize: 11,
@@ -566,9 +566,9 @@ const styles = StyleSheet.create({
   validationBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF2F2',
+    backgroundColor: '#FAF0E4',
     borderWidth: 1,
-    borderColor: '#FCA5A5',
+    borderColor: '#E5D6C5',
     padding: 12,
     borderRadius: 10,
     marginBottom: 14,

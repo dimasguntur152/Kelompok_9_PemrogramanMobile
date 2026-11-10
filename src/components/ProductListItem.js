@@ -44,29 +44,29 @@ export const ProductListItem = ({
   const getBadgeStyle = (label) => {
     if (label === 'FAVORIT!' || label === 'BEST SELLER!') {
       return {
-        bg: '#FEF3C7',
-        text: '#B45309',
-        border: '#FDE68A',
+        bg: '#FAF0E4',
+        text: '#5A2E1F',
+        border: '#E5D6C5',
       };
     }
     if (label === 'DARK SERIES') {
       return {
-        bg: '#F5F5F4',
-        text: '#292524',
-        border: '#E7E5E4',
+        bg: '#F8F3EB',
+        text: '#38251D',
+        border: '#E5D6C5',
       };
     }
     if (label === 'LIGHT SERIES') {
       return {
-        bg: '#FFF7ED',
-        text: '#C2410C',
-        border: '#FFEDD5',
+        bg: '#FAF0E4',
+        text: '#8B5E3C',
+        border: '#E5D6C5',
       };
     }
     return {
       bg: colors.primarySoft,
       text: colors.primary,
-      border: '#FED7D7',
+      border: colors.borderLight,
     };
   };
 
@@ -365,11 +365,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 12,
-    backgroundColor: '#F5F5F4',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
   },
   habisPlaceholderText: {
     fontSize: 11,
-    color: '#A8A29E',
+    color: colors.textMuted,
     fontWeight: '500',
   },
 });

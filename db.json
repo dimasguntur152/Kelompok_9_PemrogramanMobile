@@ -5,7 +5,7 @@
       "name": "Americano",
       "description": "Espresso yang diencerkan dengan air panas, menghasilkan cita rasa kopi yang kuat dan bersih.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285299/Americano.webp",
       "category": "Kopi",
       "label": null,
       "status": "active"
@@ -15,7 +15,7 @@
       "name": "Americano Mango",
       "description": "Americano segar dengan perpaduan sirup mangga tropis yang manis dan menyegarkan.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794287275/Americano_Mango.png",
       "category": "Kopi",
       "label": "DARK SERIES",
       "status": "active"
@@ -25,7 +25,7 @@
       "name": "Americano Lycchee",
       "description": "Americano dengan sentuhan sirup lychee yang eksotis, perpaduan kopi dan buah yang unik.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285299/Americano_Lycchee.webp",
       "category": "Kopi",
       "label": "DARK SERIES",
       "status": "active"
@@ -35,7 +35,7 @@
       "name": "Americano Peach",
       "description": "Americano dengan sirup peach yang harum dan segar, kombinasi sempurna antara pahit dan manis.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285300/Americano_Peach.webp",
       "category": "Kopi",
       "label": "DARK SERIES",
       "status": "active"
@@ -45,7 +45,7 @@
       "name": "Hot Americano",
       "description": "Americano panas klasik, cocok untuk menemani pagi atau sore hari dengan aroma kopi yang khas.",
       "price": 8000,
-      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285303/Hot_Americano.webp",
       "category": "Kopi",
       "label": null,
       "status": "active"
@@ -55,7 +55,7 @@
       "name": "Kopi Baileys",
       "description": "Kopi istimewa dengan sentuhan rasa Baileys yang creamy dan lembut, pengalaman minum kopi yang mewah.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285304/Kopi_Baileys.webp",
       "category": "Kopi",
       "label": null,
       "status": "habis"
@@ -65,7 +65,7 @@
       "name": "Kopi Crash",
       "description": "Kopi hitam sederhana dengan cita rasa yang kuat dan autentik, harga terjangkau untuk mahasiswa.",
       "price": 5000,
-      "image": "https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285305/Kopi_Crash.webp",
       "category": "Kopi",
       "label": null,
       "status": "active"
@@ -75,7 +75,7 @@
       "name": "Kopi Crash Susu",
       "description": "Kopi crash yang dipadukan dengan susu segar, menghasilkan kopi susu yang creamy dan terjangkau.",
       "price": 7000,
-      "image": "https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285293/Kopi_Crash_Susu.webp",
       "category": "Kopi",
       "label": null,
       "status": "active"
@@ -85,7 +85,7 @@
       "name": "Kopi Susu Mantap",
       "description": "Menu favorit Tong Family! Kopi susu dengan komposisi espresso dan susu yang pas, rasa mantap sejati.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285294/Kopi_Susu_Mantap.webp",
       "category": "Kopi",
       "label": "FAVORIT!",
       "status": "active"
@@ -95,7 +95,7 @@
       "name": "Kopi Susu Sangar",
       "description": "Kopi susu dengan karakter yang lebih kuat, untuk kamu yang butuh tenaga ekstra menghadapi hari.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1498804103079-a6351b050096?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285295/Kopi_Susu_Sangar.webp",
       "category": "Kopi",
       "label": null,
       "status": "active"
@@ -105,7 +105,7 @@
       "name": "Kopi Susu Legit",
       "description": "Kopi susu premium dengan rasa yang lebih manis dan legit, sempurna untuk menemani waktu belajarmu.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285294/Kopi_Susu_Legit.webp",
       "category": "Kopi",
       "label": null,
       "status": "active"
@@ -115,7 +115,7 @@
       "name": "Bublegum",
       "description": "Minuman segar dengan rasa bubblegum yang unik dan warna menarik, cocok untuk anak muda.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285300/Bublegum.jpg",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -125,7 +125,7 @@
       "name": "Choco Banana",
       "description": "Minuman coklat lezat yang dipadukan dengan pisang, perpaduan rasa yang creamy dan menyenangkan.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285301/Choco_Banana.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -135,7 +135,7 @@
       "name": "Cream Cheese",
       "description": "Minuman segar dengan topping cream cheese yang kaya dan gurih, sensasi rasa yang unik.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285302/Cream_Cheese.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -145,7 +145,7 @@
       "name": "Hot Choco Banana",
       "description": "Minuman coklat pisang versi panas yang hangat dan nyaman untuk menemani aktivitasmu.",
       "price": 10000,
-      "image": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285303/Hot_Choco_Banana.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -155,7 +155,7 @@
       "name": "Hot Coklat",
       "description": "Hot chocolate klasik yang hangat dan lezat, pilihan sempurna untuk menghangatkan hari.",
       "price": 8000,
-      "image": "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285304/Hot_Coklat.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -165,7 +165,7 @@
       "name": "Coklat",
       "description": "Minuman coklat dingin yang segar dan kaya rasa, terbuat dari bahan coklat pilihan berkualitas.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1471943038949-fddf2d3d9f9b?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285301/Coklat.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -175,7 +175,7 @@
       "name": "Hot Matcha",
       "description": "Matcha panas autentik dengan rasa green tea yang khas dan menenangkan, baik untuk kesehatan.",
       "price": 8000,
-      "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285304/HOT_MATCHA.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -185,7 +185,7 @@
       "name": "Matcha",
       "description": "Best seller! Minuman matcha dingin yang menyegarkan dengan rasa green tea yang autentik dan premium.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1593443320739-77f74939d0da?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285297/MATCHA.jpg",
       "category": "Non-Kopi",
       "label": "BEST SELLER!",
       "status": "active"
@@ -195,7 +195,7 @@
       "name": "Light Spark Lychee",
       "description": "Minuman sparkling ringan dengan rasa lychee yang segar dan menyegarkan, cocok untuk hari panas.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285295/Light_Spark_Lychee.webp",
       "category": "Non-Kopi",
       "label": "LIGHT SERIES",
       "status": "active"
@@ -205,7 +205,7 @@
       "name": "Light Spark Mango",
       "description": "Sparkling mango yang menyegarkan dengan rasa mangga tropis yang kuat dan buah-buahan segar.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285295/Light_Spark_Mango.webp",
       "category": "Non-Kopi",
       "label": "LIGHT SERIES",
       "status": "active"
@@ -215,7 +215,7 @@
       "name": "Light Spark Peach",
       "description": "Minuman sparkling dengan rasa peach yang manis dan segar, ringan di perut namun kaya rasa.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285296/Light_Spark_Peach.webp",
       "category": "Non-Kopi",
       "label": "LIGHT SERIES",
       "status": "active"
@@ -225,7 +225,7 @@
       "name": "Milo Malay",
       "description": "Milo ala Malaysia yang creamy dan lezat, dengan rasa coklat malt yang khas dan sangat digemari.",
       "price": 15000,
-      "image": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285298/Milo_Malay.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -235,7 +235,7 @@
       "name": "Thai Tea",
       "description": "Thai tea autentik dengan rasa teh yang kuat dan susu kental manis yang khas, langsung dari cita rasa Thailand.",
       "price": 13000,
-      "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285298/Thai_Tea.webp",
       "category": "Non-Kopi",
       "label": null,
       "status": "active"
@@ -317,6 +317,16 @@
       "price": 3000,
       "image": "https://images.unsplash.com/photo-1527866959252-de636b9b9a3d?w=400&q=80",
       "category": "Lain-lain",
+      "label": null,
+      "status": "active"
+    },
+    {
+      "id": 33,
+      "name": "Matcha Strawberry",
+      "description": "",
+      "price": 15000,
+      "image": "https://res.cloudinary.com/wezbgh2i/image/upload/v1794285297/Matcha_strawberry.webp",
+      "category": "Non-Kopi",
       "label": null,
       "status": "active"
     }
@@ -417,6 +427,22 @@
       "role": "Civitas Akademika • Kampus 3 UMM",
       "passwordHash": "$2b$10$mZaACjWrJiMxUb5aH4NWleZ30KsOEiMTl5VV2Xy9S3ldYjSHCv7XC",
       "createdAt": "2026-11-09T14:04:12.026Z"
+    },
+    {
+      "id": 1794276466182,
+      "name": "dimas",
+      "email": "dimas@gmail.com",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$bmPnaFAz8sYvoisvhMXp8OCfun/spGCz2zP6a/Bi9OBjqzhrqXbX6",
+      "createdAt": "2026-11-10T02:07:46.182Z"
+    },
+    {
+      "id": 1794292495916,
+      "name": "digun",
+      "email": "digun@gmail.com",
+      "role": "Civitas Akademika • Kampus 3 UMM",
+      "passwordHash": "$2b$10$FobNBpv91zQca32Kk0VbZOjgcsFuS2J3y1p0cFfXm8c/GR2Ut9f5m",
+      "createdAt": "2026-11-10T06:34:55.916Z"
     }
   ],
   "orders": []

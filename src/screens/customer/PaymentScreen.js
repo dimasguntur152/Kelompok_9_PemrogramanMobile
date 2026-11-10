@@ -172,7 +172,7 @@ export const PaymentScreen = () => {
               <Text style={styles.stepNum}>1</Text>
             </View>
             <Text style={styles.stepText}>
-              Buka aplikasi e-wallet atau mobile banking di ponsel Anda.
+              Buka aplikasi e-wallet atau mobile banking di ponselmu.
             </Text>
           </View>
 
@@ -190,7 +190,7 @@ export const PaymentScreen = () => {
               <Text style={styles.stepNum}>3</Text>
             </View>
             <Text style={styles.stepText}>
-              Pastikan nama merchant "KEDAI TONG DJAJARTA" dan nominal sesuai ({formatRupiah(cartGrandTotal)}).
+              Pastikan nama merchant &quot;KEDAI TONG DJAJAKARTA&quot; dan nominal sesuai ({formatRupiah(cartGrandTotal)}).
             </Text>
           </View>
 
@@ -199,7 +199,7 @@ export const PaymentScreen = () => {
               <Text style={styles.stepNum}>4</Text>
             </View>
             <Text style={styles.stepText}>
-              Selesaikan transaksi dan tekan tombol "Saya Sudah Membayar".
+              Selesaikan transaksi dan tekan tombol &quot;Saya Sudah Membayar&quot;.
             </Text>
           </View>
         </View>
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
   },
   totalBannerLabel: {
     fontSize: 13,
-    color: '#FED7D7',
+    color: '#E5D6C5',
     fontWeight: '500',
     marginBottom: 4,
   },
@@ -656,8 +656,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalDetailsBox: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundAlt,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.borderLight,
     padding: 12,
     marginBottom: 18,
   },

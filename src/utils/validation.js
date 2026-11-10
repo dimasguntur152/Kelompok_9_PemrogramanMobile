@@ -39,22 +39,22 @@ export const validateRegister = ({ name, email, password, confirmPassword }) => 
   if (!email || !email.trim()) {
     errors.email = 'Email wajib diisi.';
   } else if (!isValidEmail(email)) {
-    errors.email = 'Format email tidak valid (contoh: civitas@umm.ac.id).';
+    errors.email = 'Format email belum sesuai (contoh: nama@email.com).';
   }
 
   // 3. Password validation
   if (!password) {
-    errors.password = 'Password wajib diisi.';
+    errors.password = 'Kata sandi wajib diisi.';
   } else if (password.length < 6) {
-    errors.password = 'Password minimal harus 6 karakter.';
+    errors.password = 'Kata sandi minimal 6 karakter.';
   }
 
   // 4. Confirm Password validation (if provided)
   if (confirmPassword !== undefined) {
     if (!confirmPassword) {
-      errors.confirmPassword = 'Konfirmasi password wajib diisi.';
+      errors.confirmPassword = 'Konfirmasi kata sandi wajib diisi.';
     } else if (confirmPassword !== password) {
-      errors.confirmPassword = 'Konfirmasi password tidak sesuai.';
+      errors.confirmPassword = 'Konfirmasi kata sandi tidak cocok.';
     }
   }
 
@@ -75,11 +75,11 @@ export const validateLogin = ({ identifier, password }) => {
   const errors = {};
 
   if (!identifier || !identifier.trim()) {
-    errors.identifier = 'Email atau username wajib diisi.';
+    errors.identifier = 'Email atau nama pengguna wajib diisi.';
   }
 
   if (!password) {
-    errors.password = 'Password wajib diisi.';
+    errors.password = 'Kata sandi wajib diisi.';
   }
 
   return {

@@ -15,16 +15,14 @@ import { colors } from '../../theme/colors';
 import { KEDAI_INFO } from '../../data/mockData';
 import { CameraModal } from '../../components/CameraModal';
 import { uploadProfilePhoto } from '../../services/profilePhotoService';
-import { pickImageFromGallery } from '../../utils/imagePicker';
 
 export const ProfileScreen = () => {
-  const { currentUser, logout, profilePhoto, setProfilePhoto, loadProfilePhoto } = useApp();
+  const { currentUser, logout, profilePhoto, loadProfilePhoto } = useApp();
   const [activeModal, setActiveModal] = useState(null); // 'account' | 'help' | 'about' | 'logout' | null
   const [cameraModalVisible, setCameraModalVisible] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatusMessage, setUploadStatusMessage] = useState(null);
   const [cameraError, setCameraError] = useState(null);
-  const [galleryPhotoUri, setGalleryPhotoUri] = useState(null);
 
   // Ambil foto profil aktif dari database MySQL saat halaman Profil dibuka
   useEffect(() => {
@@ -56,7 +54,6 @@ export const ProfileScreen = () => {
       const result = await uploadProfilePhoto(capturedPhotoSource);
 
       if (result.success) {
-        setGalleryPhotoUri(null);
         // 1. Tampilkan feedback berhasil
         setUploadStatusMessage({
           title: 'Foto Profil Berhasil Disimpan',
@@ -92,23 +89,6 @@ export const ProfileScreen = () => {
     }
   };
 
-  const handleResetPhoto = () => {
-    setProfilePhoto(null);
-    setGalleryPhotoUri(null);
-    setCameraError(null);
-    setUploadStatusMessage(null);
-  };
-
-  const handlePickGallery = async () => {
-    setCameraError(null);
-    setUploadStatusMessage(null);
-    const uri = await pickImageFromGallery();
-    if (!uri) return;
-
-    setGalleryPhotoUri(uri);
-    await handlePhotoCaptured(uri);
-  };
-
   return (
     <ScrollView
       style={styles.container}
@@ -128,9 +108,9 @@ export const ProfileScreen = () => {
           }
         >
           <View style={styles.avatarWrapper}>
-            {galleryPhotoUri || profilePhoto ? (
+            {profilePhoto ? (
               <Image
-                source={{ uri: galleryPhotoUri || profilePhoto }}
+                source={{ uri: profilePhoto }}
                 style={styles.avatarImage}
                 resizeMode="cover"
                 accessibilityLabel="Foto Profil Pengguna"
@@ -237,33 +217,6 @@ export const ProfileScreen = () => {
                 {profilePhoto ? 'Buka Kamera • Ubah Foto Profil' : 'Buka Kamera • Ambil Foto Profil'}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.galleryButton}
-              onPress={handlePickGallery}
-              disabled={isUploading}
-              activeOpacity={0.8}
-              accessibilityRole="button"
-              accessibilityLabel="Pilih foto profil dari galeri"
-            >
-              <Ionicons
-                name="images-outline"
-                size={18}
-                color={colors.primary}
-                style={{ marginRight: 8 }}
-              />
-              <Text style={styles.galleryButtonText}>Pilih dari Galeri</Text>
-            </TouchableOpacity>
-            {galleryPhotoUri || profilePhoto ? (
-              <TouchableOpacity
-                style={styles.resetPhotoButton}
-                onPress={handleResetPhoto}
-                activeOpacity={0.8}
-                accessibilityRole="button"
-                accessibilityLabel="Hapus foto profil"
-              >
-                <Text style={styles.resetPhotoButtonText}>Hapus Foto</Text>
-              </TouchableOpacity>
-            ) : null}
           </View>
         )}
       </View>
@@ -275,37 +228,6 @@ export const ProfileScreen = () => {
         onPhotoCaptured={handlePhotoCaptured}
         isUploading={isUploading}
       />
-
-      {/* Keamanan & Sesi Card (Pertemuan 3 Requirement) */}
-      <View style={styles.securityCard}>
-        <View style={styles.securityHeader}>
-          <Ionicons
-            name="shield-checkmark"
-            size={18}
-            color={colors.statusSuccess}
-          />
-          <Text style={styles.securityTitle}>Status Keamanan & Sesi</Text>
-        </View>
-        <View style={styles.securityRow}>
-          <Text style={styles.securityLabel}>Status Sesi:</Text>
-          <View style={styles.statusPill}>
-            <View style={styles.statusDot} />
-            <Text style={styles.statusPillText}>Aktif (Secure Storage)</Text>
-          </View>
-        </View>
-        <View style={styles.securityRow}>
-          <Text style={styles.securityLabel}>Penyimpanan Token:</Text>
-          <Text style={styles.securityVal}>Expo SecureStore</Text>
-        </View>
-        <View style={styles.securityRow}>
-          <Text style={styles.securityLabel}>Tipe Token:</Text>
-          <Text style={styles.securityVal}>JWT (Bearer Token)</Text>
-        </View>
-        <View style={[styles.securityRow, { borderBottomWidth: 0 }]}>
-          <Text style={styles.securityLabel}>Keamanan Password:</Text>
-          <Text style={styles.securityVal}>Bcrypt Hashing (Server-Side)</Text>
-        </View>
-      </View>
 
       {/* Menu Options (3 required items) */}
       <View style={styles.menuSection}>
@@ -389,10 +311,6 @@ export const ProfileScreen = () => {
         />
         <Text style={styles.logoutButtonText}>Keluar</Text>
       </TouchableOpacity>
-
-      <Text style={styles.versionText}>
-        Kedai Tong Djajakarta v1.0 • P2MW UMM
-      </Text>
 
       {/* Modal 1: Informasi Akun */}
       <Modal
@@ -624,57 +542,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  galleryButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primarySoft,
-    borderWidth: 1,
-    borderColor: '#F3CACA',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 12,
-    marginTop: 9,
-    width: '100%',
-  },
-  galleryButtonText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: colors.primary,
-  },
   cameraButtonText: {
     fontSize: 13,
     fontWeight: '700',
     color: colors.textInverse,
-  },
-  photoActionsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 14,
-    width: '100%',
-    maxWidth: 240,
-    justifyContent: 'center',
-  },
-  retakeButton: {
-    marginTop: 0,
-    flex: 1,
-  },
-  resetPhotoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FEF2F2',
-    borderWidth: 1,
-    borderColor: '#FECACA',
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderRadius: 10,
-  },
-  resetPhotoButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.primaryLight,
   },
   cameraErrorBox: {
     width: '100%',
@@ -766,69 +637,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.accentDark,
   },
-  securityCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#DCFCE7',
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: colors.shadowColor,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-  },
-  securityHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  securityTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: colors.statusSuccess,
-    marginLeft: 6,
-  },
-  securityRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 7,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
-  },
-  securityLabel: {
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  securityVal: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.textPrimary,
-  },
-  statusPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F0FDF4',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#BBF7D0',
-  },
-  statusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.statusSuccess,
-    marginRight: 5,
-  },
-  statusPillText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: colors.statusSuccess,
-  },
   menuSection: {
     backgroundColor: colors.surface,
     borderRadius: 16,
@@ -883,12 +691,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: colors.primaryLight,
-  },
-  versionText: {
-    textAlign: 'center',
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 4,
   },
   modalOverlay: {
     flex: 1,
